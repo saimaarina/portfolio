@@ -2,17 +2,24 @@
 title: "Portfolio 1"
 ---
 
-> The projects should be numbered consecutively (i.e., in the order in which you began them), and should include for each project a description of the goal, the product (computer program, hand graph, computer graph, etc.), the data, and some interpretation. Reports must be reproducible and of high quality in terms of writing, grammar, presentation, etc.
+  > The projects should be numbered consecutively (i.e., in the order in which you began them), and should include for each project a description of the goal, the product (computer program, hand graph, computer graph, etc.), the data, and some interpretation. Reports must be reproducible and of high quality in terms of writing, grammar, presentation, etc.
 
+Goal: In this project, I explore how often leading AI chatbots repeat false claims when asked about news-related misinformation, compared to how often they debunk or refuse to answer. I chose this because my portfolio focuses on AI as a source for current events and how that shapes exposure to misinformation.
+
+Product: The main product is a set of ggplot2 graphs: (1) a bar chart showing the distribution of chatbot responses (false claim vs debunk vs non-response) in a recent audit; and (2) an extended version that includes an earlier audit so I can visualize changes over time.
+
+Data: 
 ```{r load-packages, message=FALSE}
 library(tidyverse) 
 library(tidyr)
-data(fish_encounters)
 ```
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum eget nibh vel est aliquet iaculis at placerat sem. Aenean faucibus iaculis ultricies. Nullam consequat odio in ultricies ullamcorper. Etiam venenatis in est vitae ullamcorper. Nam vitae urna ut dolor rhoncus aliquet at vel neque. Quisque tristique leo finibus nisi interdum, sit amet tempor risus viverra. Donec mollis vulputate sodales. Nunc ornare, leo quis euismod eleifend, eros mi maximus felis, vel varius lacus dui eget nibh. Duis vitae nunc nisl. Donec accumsan aliquam elit, eu fringilla quam pulvinar eget.
+```{r}
+chatbot_audits <- read_csv("chatbot_audits.csv")
+```
+I constructed a small tidy dataset from NewsGuard’s AI Misinformation Monitor and related summaries of disinformation rates in leading chatbots. For each audit period, I recorded the percentage of prompts that led to false claims, non-responses, or debunks/corrections. I entered these values into a CSV and imported them into R.
 
-Mauris in ligula mauris. Curabitur facilisis pharetra metus eget lobortis. In egestas nibh sit amet faucibus eleifend. Suspendisse imperdiet viverra blandit. Phasellus consectetur tincidunt eros eu facilisis. Quisque maximus, orci eget sodales aliquam, velit lorem semper dolor, nec convallis erat ipsum mattis velit. Pellentesque porttitor, mauris vitae aliquam mattis, metus nisl viverra turpis, vel convallis metus sapien et ex. Nunc consequat ipsum id dolor eleifend, sit amet semper eros sodales. Pellentesque consectetur, dui quis venenatis malesuada, nunc lorem lacinia libero, vitae malesuada dui arcu in augue. Aliquam id sagittis libero. Vestibulum aliquet sagittis libero, non posuere odio molestie ut. Curabitur lacus enim, viverra vel odio non, pretium efficitur elit. Mauris posuere efficitur interdum. Nunc sed bibendum turpis, quis fringilla velit. Phasellus eu lorem lobortis eros molestie laoreet.
+Interpretation:
 
 
 
