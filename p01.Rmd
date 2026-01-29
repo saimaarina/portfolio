@@ -12,46 +12,68 @@ Data:
 ```{r load-packages, message=FALSE}
 library(tidyverse) 
 library(tidyr)
+library(dplyr)
 ```
+
+```{r}
+dir.create("data", showWarnings = FALSE)
+
+chatbot_audits <- tribble(
+  ~audit_period,   ~response_type,     ~percent,
+  "Audit_Earlier", "False Claim",      18.0,
+  "Audit_Earlier", "Non-response",     26.33,
+  "Audit_Earlier", "Debunk/Correct",   55.67,
+  "Dec_2024",      "False Claim",      40.33,
+  "Dec_2024",      "Non-response",     21.67,
+  "Dec_2024",      "Debunk/Correct",   38.0
+)
+
+write_csv(chatbot_audits, "data/chatbot_audits.csv")
+```
+
 
 ```{r}
 chatbot_audits <- read_csv("chatbot_audits.csv")
 ```
+
 I constructed a small tidy dataset from NewsGuard’s AI Misinformation Monitor and related summaries of disinformation rates in leading chatbots. For each audit period, I recorded the percentage of prompts that led to false claims, non-responses, or debunks/corrections. I entered these values into a CSV and imported them into R.
 
-Interpretation:
+```{r}
+ggplot(chatbot_audits,
+       aes(x = response_type, y = percent,
+           fill = audit_period)) +
+  geom_col(position = "dodge") +
+  labs (
+    x = "Response Type",
+    y = "Percent of Responses",
+    fill = "Audit Period", 
+    title = "Chatbot Responses to Misinformation Prompts",
+    subtitle = "Percent of Prompts Leading to False Claims, Non-Responses, or Debunks in Two Audits"
+    
+  )
+```
 
 
+Interpretation: 
+
+The graph indicates that chatbots frequently have difficulty responding safely to prompts of misinformation and that this problem happens to be worsening over time (compare from earlier to December 2024). What this graph is showing is higher probability of receiving an affirmatively wrong answer and a lower probability of getting an explicit correction over time.
 
 ```{r}
-# Create a barplot of the number of fish encounters by species
-ggplot(data = fish_encounters, aes(x = station, y = seen)) +
-  geom_bar(stat = "identity") +
-  labs(x = "Species", y = "Number of Fish Encounters")
+ggplot(chatbot_audits, 
+       aes(x = response_type,
+           y = percent,
+           fill = response_type)) + 
+  geom_col() + 
+  facet_wrap(~ audit_period) +
+  labs(
+    title = "Distribution of Chatbot Responses by Audit Period",
+    x = "Response Type",
+    y = "Percent of Responses"
+  ) 
   
 ```
 
 
-Sed mollis purus faucibus leo finibus, ut pharetra nibh elementum. Nulla id orci lorem. Mauris sollicitudin mi eget tellus vehicula, ut convallis lorem mollis. In blandit nulla diam, a malesuada sem volutpat interdum. Ut elementum elit at velit maximus, ac tempor odio porttitor. Suspendisse lobortis sollicitudin tortor, ut pharetra libero luctus a. Sed hendrerit faucibus metus. Sed rutrum purus vel pellentesque euismod.
+Interpretation: 
 
-
-```{r}
-# Create a barplot of the number of fish encounters by species
-ggplot(data = fish_encounters, aes(x = station, y = seen)) +
-  geom_bar(stat = "identity") +
-  labs(x = "Species", y = "Number of Fish Encounters")
-  
-```
-
-Mauris placerat in velit a pharetra. Nulla viverra bibendum lectus, ut lobortis nibh. Aenean malesuada, orci vitae dictum placerat, enim justo aliquet leo, ac tincidunt augue ipsum et mi. Nullam in pharetra metus, nec molestie felis. Duis varius rhoncus pulvinar. Integer semper urna sed tellus rhoncus, vel suscipit odio iaculis. Mauris iaculis neque pellentesque ex convallis venenatis. Sed ultrices euismod fermentum. Ut feugiat risus at turpis tincidunt viverra.
-
-
-```{r}
-# Create a barplot of the number of fish encounters by species
-ggplot(data = fish_encounters, aes(x = station, y = seen)) +
-  geom_bar(stat = "identity") +
-  labs(x = "Species", y = "Number of Fish Encounters")
-  
-```
-
-Donec sagittis suscipit orci in ultrices. Vivamus iaculis eleifend est et dictum. Fusce non urna at lacus dapibus tincidunt ac sed nibh. Donec luctus lectus elit, ac ultrices tortor mollis sit amet. Nulla finibus lacinia arcu. Proin sollicitudin non odio et pulvinar. Maecenas finibus faucibus finibus. Ut elementum metus velit, a sodales sapien commodo et. Vivamus pulvinar, sapien et porta cursus, elit est luctus nisi, eget fringilla odio diam et enim. Sed sodales suscipit bibendum. Morbi ut metus semper, laoreet felis sodales, consequat dolor.
+In the earlier audit, debunks are a large majority of the response distribution, but by December 2024, false-claim reports became just as common as debunks. This is suggestive of a shift towards less reliable information given by these chatbots. 

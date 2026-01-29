@@ -1,0 +1,7 @@
+audit_period,response_type,percent
+Audit_Earlier,False Claim,18
+Audit_Earlier,Non-response,26.33
+Audit_Earlier,Debunk/Correct,55.67
+Dec_2024,False Claim,40.33
+Dec_2024,Non-response,21.67
+Dec_2024,Debunk/Correct,38

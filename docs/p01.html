@@ -313,7 +313,21 @@ non-response) in a recent audit; and (2) an extended version that
 includes an earlier audit so I can visualize changes over time.</p>
 <p>Data:</p>
 <pre class="r"><code>library(tidyverse) 
-library(tidyr)</code></pre>
+library(tidyr)
+library(dplyr)</code></pre>
+<pre class="r"><code>dir.create(&quot;data&quot;, showWarnings = FALSE)
+
+chatbot_audits &lt;- tribble(
+  ~audit_period,   ~response_type,     ~percent,
+  &quot;Audit_Earlier&quot;, &quot;False Claim&quot;,      18.0,
+  &quot;Audit_Earlier&quot;, &quot;Non-response&quot;,     26.33,
+  &quot;Audit_Earlier&quot;, &quot;Debunk/Correct&quot;,   55.67,
+  &quot;Dec_2024&quot;,      &quot;False Claim&quot;,      40.33,
+  &quot;Dec_2024&quot;,      &quot;Non-response&quot;,     21.67,
+  &quot;Dec_2024&quot;,      &quot;Debunk/Correct&quot;,   38.0
+)
+
+write_csv(chatbot_audits, &quot;data/chatbot_audits.csv&quot;)</code></pre>
 <pre class="r"><code>chatbot_audits &lt;- read_csv(&quot;chatbot_audits.csv&quot;)</code></pre>
 <pre><code>## Rows: 6 Columns: 3
 ## ── Column specification ────────────────────────────────────────────────────────
@@ -328,44 +342,43 @@ Monitor and related summaries of disinformation rates in leading
 chatbots. For each audit period, I recorded the percentage of prompts
 that led to false claims, non-responses, or debunks/corrections. I
 entered these values into a CSV and imported them into R.</p>
-<p>Interpretation:</p>
-<pre class="r"><code># Create a barplot of the number of fish encounters by species
-ggplot(data = fish_encounters, aes(x = station, y = seen)) +
-  geom_bar(stat = &quot;identity&quot;) +
-  labs(x = &quot;Species&quot;, y = &quot;Number of Fish Encounters&quot;)</code></pre>
-<p><img src="p01_files/figure-html/unnamed-chunk-2-1.png" alt="" width="672" /></p>
-<p>Sed mollis purus faucibus leo finibus, ut pharetra nibh elementum.
-Nulla id orci lorem. Mauris sollicitudin mi eget tellus vehicula, ut
-convallis lorem mollis. In blandit nulla diam, a malesuada sem volutpat
-interdum. Ut elementum elit at velit maximus, ac tempor odio porttitor.
-Suspendisse lobortis sollicitudin tortor, ut pharetra libero luctus a.
-Sed hendrerit faucibus metus. Sed rutrum purus vel pellentesque
-euismod.</p>
-<pre class="r"><code># Create a barplot of the number of fish encounters by species
-ggplot(data = fish_encounters, aes(x = station, y = seen)) +
-  geom_bar(stat = &quot;identity&quot;) +
-  labs(x = &quot;Species&quot;, y = &quot;Number of Fish Encounters&quot;)</code></pre>
+<pre class="r"><code>ggplot(chatbot_audits,
+       aes(x = response_type, y = percent,
+           fill = audit_period)) +
+  geom_col(position = &quot;dodge&quot;) +
+  labs (
+    x = &quot;Response Type&quot;,
+    y = &quot;Percent of Responses&quot;,
+    fill = &quot;Audit Period&quot;, 
+    title = &quot;Chatbot Responses to Misinformation Prompts&quot;,
+    subtitle = &quot;Percent of Prompts Leading to False Claims, Non-Responses, or Debunks in Two Audits&quot;
+    
+  )</code></pre>
 <p><img src="p01_files/figure-html/unnamed-chunk-3-1.png" alt="" width="672" /></p>
-<p>Mauris placerat in velit a pharetra. Nulla viverra bibendum lectus,
-ut lobortis nibh. Aenean malesuada, orci vitae dictum placerat, enim
-justo aliquet leo, ac tincidunt augue ipsum et mi. Nullam in pharetra
-metus, nec molestie felis. Duis varius rhoncus pulvinar. Integer semper
-urna sed tellus rhoncus, vel suscipit odio iaculis. Mauris iaculis neque
-pellentesque ex convallis venenatis. Sed ultrices euismod fermentum. Ut
-feugiat risus at turpis tincidunt viverra.</p>
-<pre class="r"><code># Create a barplot of the number of fish encounters by species
-ggplot(data = fish_encounters, aes(x = station, y = seen)) +
-  geom_bar(stat = &quot;identity&quot;) +
-  labs(x = &quot;Species&quot;, y = &quot;Number of Fish Encounters&quot;)</code></pre>
+<p>Interpretation:</p>
+<p>The graph indicates that chatbots frequently have difficulty
+responding safely to prompts of misinformation and that this problem
+happens to be worsening over time (compare from earlier to December
+2024). What this graph is showing is higher probability of receiving an
+affirmatively wrong answer and a lower probability of getting an
+explicit correction over time.</p>
+<pre class="r"><code>ggplot(chatbot_audits, 
+       aes(x = response_type,
+           y = percent,
+           fill = response_type)) + 
+  geom_col() + 
+  facet_wrap(~ audit_period) +
+  labs(
+    title = &quot;Distribution of Chatbot Responses by Audit Period&quot;,
+    x = &quot;Response Type&quot;,
+    y = &quot;Percent of Responses&quot;
+  ) </code></pre>
 <p><img src="p01_files/figure-html/unnamed-chunk-4-1.png" alt="" width="672" /></p>
-<p>Donec sagittis suscipit orci in ultrices. Vivamus iaculis eleifend
-est et dictum. Fusce non urna at lacus dapibus tincidunt ac sed nibh.
-Donec luctus lectus elit, ac ultrices tortor mollis sit amet. Nulla
-finibus lacinia arcu. Proin sollicitudin non odio et pulvinar. Maecenas
-finibus faucibus finibus. Ut elementum metus velit, a sodales sapien
-commodo et. Vivamus pulvinar, sapien et porta cursus, elit est luctus
-nisi, eget fringilla odio diam et enim. Sed sodales suscipit bibendum.
-Morbi ut metus semper, laoreet felis sodales, consequat dolor.</p>
+<p>Interpretation:</p>
+<p>In the earlier audit, debunks are a large majority of the response
+distribution, but by December 2024, false-claim reports became just as
+common as debunks. This is suggestive of a shift towards less reliable
+information given by these chatbots.</p>
 
 
 
