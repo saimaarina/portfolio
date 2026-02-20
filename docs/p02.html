@@ -383,6 +383,24 @@ result that condition did not significantly predict negative affect.</p>
 cond2_clarity &lt;- studydata_clarity %&gt;%
   filter(condition == 2) %&gt;%
   select(id, plan_clarity)</code></pre>
+<pre class="r"><code>ggplot(studydata_clarity,
+       aes(x = plan_clarity, fill = factor(condition))) +
+  geom_density(alpha = 0.4) +
+  labs(
+    title = &quot;Distribution of Plan Clarity by Condition&quot;,
+    x = &quot;Post-graduation plan clarity (1–5)&quot;,
+    fill = &quot;Condition&quot;
+  ) +
+  theme_minimal()</code></pre>
+<p><img src="p02_files/figure-html/-%20density%20plot%20for%20plan%20clarity%20scores%20by%20condition-1.png" alt="" width="672" /></p>
+<p>Interpretation: The plot shows that plan‑clarity scores in the two AI
+question conditions have very similar distributions, with most students
+falling in the mid‑range with no clear separation between conditions 1
+and 2. This suggests that random assignment to either condition of
+specific versus open‑ended AI questions did not meaningfully change how
+clear students felt about their post‑graduation plans, which fits the
+design where clarity was measured as a baseline individual difference
+rather than as an outcome of the manipulation. ​</p>
 </div>
 
 

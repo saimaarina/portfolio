@@ -72,3 +72,17 @@ cond2_clarity <- studydata_clarity %>%
   select(id, plan_clarity)
 ```
 
+```{r - density plot for plan clarity scores by condition}
+ggplot(studydata_clarity,
+       aes(x = plan_clarity, fill = factor(condition))) +
+  geom_density(alpha = 0.4) +
+  labs(
+    title = "Distribution of Plan Clarity by Condition",
+    x = "Post-graduation plan clarity (1–5)",
+    fill = "Condition"
+  ) +
+  theme_minimal()
+```
+
+Interpretation: The plot shows that plan‑clarity scores in the two AI question conditions have very similar distributions, with most students falling in the mid‑range with no clear separation between conditions 1 and 2. This suggests that random assignment to either condition of specific versus open‑ended AI questions did not meaningfully change how clear students felt about their post‑graduation plans, which fits the design where clarity was measured as a baseline individual difference rather than as an outcome of the manipulation.
+​
