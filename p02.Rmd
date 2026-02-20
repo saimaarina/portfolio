@@ -11,4 +11,11 @@ In this project, I revisit my completed experiment on AI question framing and em
 The product of this project is a small data‑processing pipeline in R that starts from the original SPSS file and produces multiple tidy datasets. First, I use the haven package to import my SPSS file and convert it into a tibble, then I construct a core dataset with one row per participant containing their condition (specific vs open‑ended questions), post‑graduation plan clarity score, and negative affect score. From this core tibble, I create additional derived datasets: one summarizing means and standard deviations by AI question type, and another summarizing negative affect by clarity group (lower vs higher clarity) crossed with question type, which will be used in later portfolio pieces for plotting main effects and potential interactions.
 
 
+```{r - loading data}
+library(tidyverse)
+library(haven)
+
+studydata_raw <- read_sav("AI Purpose Questions and Plan Clarity Study.sav") |>
+  as_tibble()
+```
 

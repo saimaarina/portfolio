@@ -13,7 +13,7 @@
 
 <title>Portfolio 2</title>
 
-<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -141,11 +141,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -174,8 +178,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -183,16 +187,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -298,13 +295,52 @@ $(document).ready(function () {
 </div>
 
 
-<blockquote>
-<p>The projects should be numbered consecutively (i.e., in the order in
-which you began them), and should include for each project a description
-of the goal, the product (computer program, hand graph, computer graph,
-etc.), the data, and some interpretation. Reports must be reproducible
-and of high quality in terms of writing, grammar, presentation, etc.</p>
-</blockquote>
+<div id="goal" class="section level3">
+<h3>Goal</h3>
+<p>In this project, I revisit my completed experiment on AI question
+framing and emotional distress in college upperclassmen and translate
+the SPSS dataset into tidy R tibbles that I can use for further
+exploratory analysis. The original study recruited 60 U.S. juniors and
+seniors to report their post‑graduation plan clarity, respond to either
+two specific or two open‑ended AI‑generated purpose questions, and then
+rate their negative affect, with the main finding that higher plan
+clarity predicted lower distress while AI question type and its
+interaction with clarity were non‑significant. My goal here is to
+organize those data in R, creating a clean participant‑level dataset and
+several grouped datasets (by question type and by clarity levels) that
+will serve as building blocks for later visualizations and models in my
+portfolio.</p>
+</div>
+<div id="products" class="section level3">
+<h3>Products</h3>
+<p>The product of this project is a small data‑processing pipeline in R
+that starts from the original SPSS file and produces multiple tidy
+datasets. First, I use the haven package to import my SPSS file and
+convert it into a tibble, then I construct a core dataset with one row
+per participant containing their condition (specific vs open‑ended
+questions), post‑graduation plan clarity score, and negative affect
+score. From this core tibble, I create additional derived datasets: one
+summarizing means and standard deviations by AI question type, and
+another summarizing negative affect by clarity group (lower vs higher
+clarity) crossed with question type, which will be used in later
+portfolio pieces for plotting main effects and potential
+interactions.</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+## ✔ dplyr     1.1.4     ✔ readr     2.1.6
+## ✔ forcats   1.0.1     ✔ stringr   1.6.0
+## ✔ ggplot2   4.0.1     ✔ tibble    3.3.1
+## ✔ lubridate 1.9.4     ✔ tidyr     1.3.2
+## ✔ purrr     1.2.1     
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+<pre class="r"><code>library(haven)
+
+studydata_raw &lt;- read_sav(&quot;AI Purpose Questions and Plan Clarity Study.sav&quot;) |&gt;
+  as_tibble()</code></pre>
+</div>
 
 
 
