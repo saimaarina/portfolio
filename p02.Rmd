@@ -8,7 +8,7 @@ In this project, I revisit my completed experiment on AI question framing and em
 
 ### Products
 
-The product of this project is a small data‑processing pipeline in R that starts from the original SPSS file and produces multiple tidy datasets. First, I use the haven package to import my SPSS file and convert it into a tibble, then I construct a core dataset with one row per participant containing their condition (specific vs open‑ended questions), post‑graduation plan clarity score, and negative affect score. From this core tibble, I create additional derived datasets: one summarizing means and standard deviations by AI question type, and another summarizing negative affect by clarity group (lower vs higher clarity) crossed with question type, which will be used in later portfolio pieces for plotting main effects and potential interactions.
+The product of this project is a small data‑processing pipeline in R that starts from the original SPSS file and produces multiple tidy datasets. First, I use the haven package to import my SPSS file and convert it into a tibble. My products include a cleaned tibble with ID, condition, plan clarity, and negative affect, an overlaid density plot showing that plan clarity is similarly distributed across the two AI‑question conditions, a version of the tibble that adds a low‑ vs high‑clarity grouping variable, an interaction‑style graph of mean negative affect by clarity group and condition, and a scatterplot with regression line showing the modest negative relationship between plan clarity and negative affect.
 
 
 ```{r - loading data}
@@ -113,4 +113,26 @@ clarity_summary <- studydata_distresssummary %>%
   )
 ```
 
+```{r - interaction plot visual mirroring figure from paper}
+ggplot(clarity_summary,
+       aes(x = clarity_group,
+           y = mean_affect,
+           color = factor(condition),
+           group = factor(condition))) +
+  geom_point(position = position_dodge(width = 0.2)) +
+  geom_line(position = position_dodge(width = 0.2)) +
+  geom_errorbar(aes(ymin = mean_affect - sd_affect / sqrt(n),
+                    ymax = mean_affect + sd_affect / sqrt(n)),
+                width = 0.1,
+                position = position_dodge(width = 0.2)) +
+  labs(
+    title = "Mean Negative Affect by Plan Clarity Group and Condition",
+    x = "Plan clarity group",
+    y = "Mean negative affect (1–5)",
+    color = "Condition"
+  ) +
+  theme_minimal()
+```
+
+Interpretation: Students in the higher‑clarity group report lower mean negative affect than those in the lower‑clarity group, and this difference appears similar in both AI question conditions, consistent with the non‑significant interaction and the main effect of clarity reported in my original analyses.
 
