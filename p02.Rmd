@@ -2,4 +2,13 @@
 title: "Portfolio 2"
 ---
 
-> The projects should be numbered consecutively (i.e., in the order in which you began them), and should include for each project a description of the goal, the product (computer program, hand graph, computer graph, etc.), the data, and some interpretation. Reports must be reproducible and of high quality in terms of writing, grammar, presentation, etc.
+### Goal
+
+In this project, I revisit my completed experiment on AI question framing and emotional distress in college upperclassmen and translate the SPSS dataset into tidy R tibbles that I can use for further exploratory analysis. The original study recruited 60 U.S. juniors and seniors to report their post‑graduation plan clarity, respond to either two specific or two open‑ended AI‑generated purpose questions, and then rate their negative affect, with the main finding that higher plan clarity predicted lower distress while AI question type and its interaction with clarity were non‑significant. My goal here is to organize those data in R, creating a clean participant‑level dataset and several grouped datasets (by question type and by clarity levels) that will serve as building blocks for later visualizations and models in my portfolio.
+
+### Products
+
+The product of this project is a small data‑processing pipeline in R that starts from the original SPSS file and produces multiple tidy datasets. First, I use the haven package to import my SPSS file and convert it into a tibble, then I construct a core dataset with one row per participant containing their condition (specific vs open‑ended questions), post‑graduation plan clarity score, and negative affect score. From this core tibble, I create additional derived datasets: one summarizing means and standard deviations by AI question type, and another summarizing negative affect by clarity group (lower vs higher clarity) crossed with question type, which will be used in later portfolio pieces for plotting main effects and potential interactions.
+
+
+
