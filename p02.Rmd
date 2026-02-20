@@ -38,7 +38,7 @@ cond2_distress <- studydata_emotion %>%
   select(id, neg_affect)
 ```
 
-```{r}
+```{r - density plot for neg affect by condition}
 ggplot(studydata_emotion,
        aes(x = neg_affect, fill = factor(condition))) +
   geom_density(alpha = 0.4) +
@@ -51,3 +51,24 @@ ggplot(studydata_emotion,
 ```
 
 Interpretation: Most students report relatively low negative affect (around 1–2 on the 1–5 scale), with fewer students at higher distress levels. There is heavy overlap between the two density curves, with only very small differences across the range of scores, suggesting that the framing of the AI questions did not meaningfully change the distribution of emotional distress in this sample. That is consistent with the arlier result that condition did not significantly predict negative affect.
+
+
+```{r - create dataframe to measure plan clarity scores}
+studydata_clarity <- studydata_raw %>% 
+  transmute(
+    id           = ID,
+    condition    = condition,
+    plan_clarity = PlanClarity_Mean
+  )
+```
+
+```{r sep by conditions}
+cond1_clarity <- studydata_clarity %>%
+  filter(condition == 1) %>%
+  select(id, plan_clarity)
+
+cond2_clarity <- studydata_clarity %>%
+  filter(condition == 2) %>%
+  select(id, plan_clarity)
+```
+

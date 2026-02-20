@@ -362,7 +362,7 @@ cond2_distress &lt;- studydata_emotion %&gt;%
     fill = &quot;Condition&quot;
   ) +
   theme_minimal()</code></pre>
-<p><img src="p02_files/figure-html/unnamed-chunk-1-1.png" alt="" width="672" /></p>
+<p><img src="p02_files/figure-html/-%20density%20plot%20for%20neg%20affect%20by%20condition-1.png" alt="" width="672" /></p>
 <p>Interpretation: Most students report relatively low negative affect
 (around 1–2 on the 1–5 scale), with fewer students at higher distress
 levels. There is heavy overlap between the two density curves, with only
@@ -370,6 +370,19 @@ very small differences across the range of scores, suggesting that the
 framing of the AI questions did not meaningfully change the distribution
 of emotional distress in this sample. That is consistent with the arlier
 result that condition did not significantly predict negative affect.</p>
+<pre class="r"><code>studydata_clarity &lt;- studydata_raw %&gt;% 
+  transmute(
+    id           = ID,
+    condition    = condition,
+    plan_clarity = PlanClarity_Mean
+  )</code></pre>
+<pre class="r"><code>cond1_clarity &lt;- studydata_clarity %&gt;%
+  filter(condition == 1) %&gt;%
+  select(id, plan_clarity)
+
+cond2_clarity &lt;- studydata_clarity %&gt;%
+  filter(condition == 2) %&gt;%
+  select(id, plan_clarity)</code></pre>
 </div>
 
 
