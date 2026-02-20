@@ -353,6 +353,23 @@ studydata_raw &lt;- read_sav(&quot;AI Purpose Questions and Plan Clarity Study.s
 cond2_distress &lt;- studydata_emotion %&gt;% 
   filter(condition == 2) %&gt;% 
   select(id, neg_affect)</code></pre>
+<pre class="r"><code>ggplot(studydata_emotion,
+       aes(x = neg_affect, fill = factor(condition))) +
+  geom_density(alpha = 0.4) +
+  labs(
+    title = &quot;Distribution of Negative Affect by Condition&quot;,
+    x = &quot;Negative affect (1–5)&quot;,
+    fill = &quot;Condition&quot;
+  ) +
+  theme_minimal()</code></pre>
+<p><img src="p02_files/figure-html/unnamed-chunk-1-1.png" alt="" width="672" /></p>
+<p>Interpretation: Most students report relatively low negative affect
+(around 1–2 on the 1–5 scale), with fewer students at higher distress
+levels. There is heavy overlap between the two density curves, with only
+very small differences across the range of scores, suggesting that the
+framing of the AI questions did not meaningfully change the distribution
+of emotional distress in this sample. That is consistent with the arlier
+result that condition did not significantly predict negative affect.</p>
 </div>
 
 
