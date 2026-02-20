@@ -444,7 +444,24 @@ studydata_distresssummary &lt;- studydata_raw %&gt;%
 mean negative affect than those in the lower‑clarity group, and this
 difference appears similar in both AI question conditions, consistent
 with the non‑significant interaction and the main effect of clarity
-reported in my original analyses.</p>
+reported in my original analysis.</p>
+<pre class="r"><code>ggplot(studydata_distresssummary,
+       aes(x = plan_clarity, y = neg_affect)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = &quot;lm&quot;, se = TRUE, color = &quot;red&quot;) +
+  labs(
+    title = &quot;Plan Clarity and Negative Affect&quot;,
+    x = &quot;Post-graduation plan clarity (1–5)&quot;,
+    y = &quot;Negative affect (1–5)&quot;
+  ) +
+  theme_minimal()</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="p02_files/figure-html/-%20clarity%20vs%20distress-1.png" alt="" width="672" /></p>
+<p>Interpretation: The scatterplot with regression line shows a modest
+downward trend. Students with clearer post‑graduation plans (higher plan
+clarity) tend to report somewhat lower negative affect, matching the
+negative correlation and regression coefficient in the original SPSS
+results.</p>
 </div>
 
 

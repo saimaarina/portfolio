@@ -134,5 +134,24 @@ ggplot(clarity_summary,
   theme_minimal()
 ```
 
-Interpretation: Students in the higher‑clarity group report lower mean negative affect than those in the lower‑clarity group, and this difference appears similar in both AI question conditions, consistent with the non‑significant interaction and the main effect of clarity reported in my original analyses.
+Interpretation: Students in the higher‑clarity group report lower mean negative affect than those in the lower‑clarity group, and this difference appears similar in both AI question conditions, consistent with the non‑significant interaction and the main effect of clarity reported in my original analysis.
+
+
+```{r - clarity vs distress}
+ggplot(studydata_distresssummary,
+       aes(x = plan_clarity, y = neg_affect)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = TRUE, color = "red") +
+  labs(
+    title = "Plan Clarity and Negative Affect",
+    x = "Post-graduation plan clarity (1–5)",
+    y = "Negative affect (1–5)"
+  ) +
+  theme_minimal()
+```
+
+Interpretation: The scatterplot with regression line shows a modest downward trend. Students with clearer post‑graduation plans (higher plan clarity) tend to report somewhat lower negative affect, matching the negative correlation and regression coefficient in the original SPSS results.
+
+
+
 
