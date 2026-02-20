@@ -85,4 +85,32 @@ ggplot(studydata_clarity,
 ```
 
 Interpretation: The plot shows that plan‑clarity scores in the two AI question conditions have very similar distributions, with most students falling in the mid‑range with no clear separation between conditions 1 and 2. This suggests that random assignment to either condition of specific versus open‑ended AI questions did not meaningfully change how clear students felt about their post‑graduation plans, which fits the design where clarity was measured as a baseline individual difference rather than as an outcome of the manipulation.
-​
+
+
+```{r - create clarity groups for distress summary}
+median_clarity <- median(studydata_raw$PlanClarity_Mean, na.rm = TRUE)
+
+studydata_distresssummary <- studydata_raw %>%
+  transmute(
+    id           = ID,
+    condition    = condition,
+    plan_clarity = PlanClarity_Mean,
+    neg_affect   = NegAff_Mean
+  ) %>%
+  mutate(
+    clarity_group = if_else(plan_clarity < median_clarity,
+                            "Lower clarity", "Higher clarity")
+  )
+```
+```{r - neg affect summary by clarity group and condition}
+clarity_summary <- studydata_distresssummary %>%
+  group_by(clarity_group, condition) %>%
+  summarize(
+    n           = n(),
+    mean_affect = mean(neg_affect, na.rm = TRUE),
+    sd_affect   = sd(neg_affect, na.rm = TRUE),
+    .groups = "drop"
+  )
+```
+
+

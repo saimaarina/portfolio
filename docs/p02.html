@@ -400,7 +400,28 @@ and 2. This suggests that random assignment to either condition of
 specific versus open‑ended AI questions did not meaningfully change how
 clear students felt about their post‑graduation plans, which fits the
 design where clarity was measured as a baseline individual difference
-rather than as an outcome of the manipulation. ​</p>
+rather than as an outcome of the manipulation.</p>
+<pre class="r"><code>median_clarity &lt;- median(studydata_raw$PlanClarity_Mean, na.rm = TRUE)
+
+studydata_distresssummary &lt;- studydata_raw %&gt;%
+  transmute(
+    id           = ID,
+    condition    = condition,
+    plan_clarity = PlanClarity_Mean,
+    neg_affect   = NegAff_Mean
+  ) %&gt;%
+  mutate(
+    clarity_group = if_else(plan_clarity &lt; median_clarity,
+                            &quot;Lower clarity&quot;, &quot;Higher clarity&quot;)
+  )</code></pre>
+<pre class="r"><code>clarity_summary &lt;- studydata_distresssummary %&gt;%
+  group_by(clarity_group, condition) %&gt;%
+  summarize(
+    n           = n(),
+    mean_affect = mean(neg_affect, na.rm = TRUE),
+    sd_affect   = sd(neg_affect, na.rm = TRUE),
+    .groups = &quot;drop&quot;
+  )</code></pre>
 </div>
 
 
