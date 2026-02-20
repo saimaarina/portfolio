@@ -15,7 +15,26 @@ The product of this project is a small data‑processing pipeline in R that star
 library(tidyverse)
 library(haven)
 
-studydata_raw <- read_sav("AI Purpose Questions and Plan Clarity Study.sav") |>
+studydata_raw <- read_sav("AI Purpose Questions and Plan Clarity Study.sav") %>% 
   as_tibble()
+```
+
+```{r - create dataframe to measure emotional distress scores}
+studydata_emotion <- studydata_raw %>% 
+  transmute(
+    id           = ID,
+    condition    = condition,         
+    neg_affect   = NegAff_Mean
+  )
+```
+
+```{r - sep into conditions}
+cond1_distress <- studydata_emotion %>% 
+  filter(condition == 1) %>% 
+  select(id, neg_affect)
+
+cond2_distress <- studydata_emotion %>% 
+  filter(condition == 2) %>% 
+  select(id, neg_affect)
 ```
 

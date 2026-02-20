@@ -338,8 +338,21 @@ interactions.</p>
 ## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 <pre class="r"><code>library(haven)
 
-studydata_raw &lt;- read_sav(&quot;AI Purpose Questions and Plan Clarity Study.sav&quot;) |&gt;
+studydata_raw &lt;- read_sav(&quot;AI Purpose Questions and Plan Clarity Study.sav&quot;) %&gt;% 
   as_tibble()</code></pre>
+<pre class="r"><code>studydata_emotion &lt;- studydata_raw %&gt;% 
+  transmute(
+    id           = ID,
+    condition    = condition,         
+    neg_affect   = NegAff_Mean
+  )</code></pre>
+<pre class="r"><code>cond1_distress &lt;- studydata_emotion %&gt;% 
+  filter(condition == 1) %&gt;% 
+  select(id, neg_affect)
+
+cond2_distress &lt;- studydata_emotion %&gt;% 
+  filter(condition == 2) %&gt;% 
+  select(id, neg_affect)</code></pre>
 </div>
 
 
