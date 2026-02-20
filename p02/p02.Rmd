@@ -1,0 +1,172 @@
+---
+title: "Portfolio 2 - AI Question Framing and Emotional Responses to Purpose Reflection in College Upperclassmen"
+---
+
+### Goal
+
+
+In this project, I revisit my completed experiment on AI question framing and emotional distress in college upperclassmen and translate the SPSS dataset into tidy R tibbles that I can use for further exploratory analysis. The original study recruited 60 U.S. juniors and seniors to report their post‑graduation plan clarity, respond to either two specific or two open‑ended AI‑generated purpose questions, and then rate their negative affect, with the main finding that higher plan clarity predicted lower distress while AI question type and its interaction with clarity were non‑significant. My goal here is to organize those data in R, creating a clean participant‑level dataset and several grouped datasets (by question type and by clarity levels) that will serve as building blocks for later visualizations and models in my portfolio.
+
+
+
+### Products
+
+The product of this project is a small data‑processing pipeline in R that starts from the original SPSS file and produces multiple tidy datasets. First, I use the haven package to import my SPSS file and convert it into a tibble. My products include a cleaned tibble with ID, condition, plan clarity, and negative affect, an overlaid density plot showing that plan clarity is similarly distributed across the two AI‑question conditions, a version of the tibble that adds a low‑ vs high‑clarity grouping variable, an interaction‑style graph of mean negative affect by clarity group and condition, and a scatterplot with regression line showing the modest negative relationship between plan clarity and negative affect.
+
+
+```{r - loading data}
+library(tidyverse)
+library(haven)
+
+studydata_raw <- read_sav("AI Purpose Questions and Plan Clarity Study.sav") %>% 
+  as_tibble()
+```
+
+```{r - create dataframe to measure emotional distress scores}
+studydata_emotion <- studydata_raw %>% 
+  transmute(
+    id           = ID,
+    condition    = condition,         
+    neg_affect   = NegAff_Mean
+  )
+```
+
+```{r - sep into conditions}
+cond1_distress <- studydata_emotion %>% 
+  filter(condition == 1) %>% 
+  select(id, neg_affect)
+
+cond2_distress <- studydata_emotion %>% 
+  filter(condition == 2) %>% 
+  select(id, neg_affect)
+```
+
+```{r - density plot for neg affect by condition}
+ggplot(studydata_emotion,
+       aes(x = neg_affect, fill = factor(condition))) +
+  geom_density(alpha = 0.4) +
+  labs(
+    title = "Distribution of Negative Affect by Condition",
+    x = "Negative affect (1–5)",
+    fill = "Condition"
+  ) +
+  theme_minimal()
+```
+
+Interpretation: Most students report relatively low negative affect (around 1–2 on the 1–5 scale), with fewer students at higher distress levels. There is heavy overlap between the two density curves, with only very small differences across the range of scores, suggesting that the framing of the AI questions did not meaningfully change the distribution of emotional distress in this sample. That is consistent with the arlier result that condition did not significantly predict negative affect.
+
+
+```{r - create dataframe to measure plan clarity scores}
+studydata_clarity <- studydata_raw %>% 
+  transmute(
+    id           = ID,
+    condition    = condition,
+    plan_clarity = PlanClarity_Mean
+  )
+```
+
+```{r sep by conditions}
+cond1_clarity <- studydata_clarity %>%
+  filter(condition == 1) %>%
+  select(id, plan_clarity)
+
+cond2_clarity <- studydata_clarity %>%
+  filter(condition == 2) %>%
+  select(id, plan_clarity)
+```
+
+```{r - density plot for plan clarity scores by condition}
+ggplot(studydata_clarity,
+       aes(x = plan_clarity, fill = factor(condition))) +
+  geom_density(alpha = 0.4) +
+  labs(
+    title = "Distribution of Plan Clarity by Condition",
+    x = "Post-graduation plan clarity (1–5)",
+    fill = "Condition"
+  ) +
+  theme_minimal()
+```
+
+Interpretation: The plot shows that plan‑clarity scores in the two AI question conditions have very similar distributions, with most students falling in the mid‑range with no clear separation between conditions 1 and 2. This suggests that random assignment to either condition of specific versus open‑ended AI questions did not meaningfully change how clear students felt about their post‑graduation plans, which fits the design where clarity was measured as a baseline individual difference rather than as an outcome of the manipulation.
+
+
+```{r - create clarity groups for distress summary}
+median_clarity <- median(studydata_raw$PlanClarity_Mean, na.rm = TRUE)
+
+studydata_distresssummary <- studydata_raw %>%
+  transmute(
+    id           = ID,
+    condition    = condition,
+    plan_clarity = PlanClarity_Mean,
+    neg_affect   = NegAff_Mean
+  ) %>%
+  mutate(
+    clarity_group = if_else(plan_clarity < median_clarity,
+                            "Lower clarity", "Higher clarity")
+  )
+```
+```{r - neg affect summary by clarity group and condition}
+clarity_summary <- studydata_distresssummary %>%
+  group_by(clarity_group, condition) %>%
+  summarize(
+    n           = n(),
+    mean_affect = mean(neg_affect, na.rm = TRUE),
+    sd_affect   = sd(neg_affect, na.rm = TRUE),
+    .groups = "drop"
+  )
+```
+
+```{r - interaction plot visual mirroring figure from paper}
+ggplot(clarity_summary,
+       aes(x = clarity_group,
+           y = mean_affect,
+           color = factor(condition),
+           group = factor(condition))) +
+  geom_point(position = position_dodge(width = 0.2)) +
+  geom_line(position = position_dodge(width = 0.2)) +
+  geom_errorbar(aes(ymin = mean_affect - sd_affect / sqrt(n),
+                    ymax = mean_affect + sd_affect / sqrt(n)),
+                width = 0.1,
+                position = position_dodge(width = 0.2)) +
+  labs(
+    title = "Mean Negative Affect by Plan Clarity Group and Condition",
+    x = "Plan clarity group",
+    y = "Mean negative affect (1–5)",
+    color = "Condition"
+  ) +
+  theme_minimal()
+```
+
+Interpretation: Students in the higher‑clarity group report lower mean negative affect than those in the lower‑clarity group, and this difference appears similar in both AI question conditions, consistent with the non‑significant interaction and the main effect of clarity reported in my original analysis.
+
+
+```{r - clarity vs distress}
+ggplot(studydata_distresssummary,
+       aes(x = plan_clarity, y = neg_affect)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = TRUE, color = "red") +
+  labs(
+    title = "Plan Clarity and Negative Affect",
+    x = "Post-graduation plan clarity (1–5)",
+    y = "Negative affect (1–5)"
+  ) +
+  theme_minimal()
+```
+
+Interpretation: The scatterplot with regression line shows a modest downward trend. Students with clearer post‑graduation plans (higher plan clarity) tend to report somewhat lower negative affect, matching the negative correlation and regression coefficient in the original SPSS results.
+
+
+
+### Data
+
+
+
+The data came from my AI purpose‑question study of 60 U.S. juniors and seniors recruited through the platform Prolific, who completed a Qualtrics survey later exported to SPSS and then imported into R as a data frame using haven. I focused on variables for participant ID, experimental condition (specific vs open‑ended AI questions), post‑graduation plan clarity, and negative affect, and I created a new cleaned tibble that kept only these variables, removed any incomplete cases, and added a binary low‑ vs high‑clarity grouping variable using a median split.
+
+
+
+### Interpretation
+
+
+
+I found the visual patterns made it much more obvious to see and recognize the interaction despite it being rather small, like seeing nearly parallel lines and overlapping distributions in plan clarity helped me think about how  clarity is acting more like a general individual‑difference correlate of distress than a strong moderator of the AI question effect, and it makes me want to possibly explore clarity or other aspects of it (like future plan instead of post-graduation) more directly as a predictor of outcomes in follow‑up work.
