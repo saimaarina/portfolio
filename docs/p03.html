@@ -367,6 +367,54 @@ age_demo &lt;- studydata_raw %&gt;%
     id  = ID,
     age = Age
   )</code></pre>
+<pre class="r"><code>studydata_emotion_demo &lt;- studydata_emotion %&gt;% 
+  left_join(gender_demo,    by = &quot;id&quot;) %&gt;% 
+  left_join(classyear_demo, by = &quot;id&quot;) %&gt;% 
+  left_join(age_demo,       by = &quot;id&quot;)</code></pre>
+<pre class="r"><code>overall_distress_summary &lt;- studydata_emotion_demo %&gt;% 
+  summarise(
+    n        = n(),
+    mean     = mean(neg_affect),
+    sd       = sd(neg_affect),
+    min      = min(neg_affect),
+    max      = max(neg_affect)
+  )</code></pre>
+<pre class="r"><code>gender_distress_summary &lt;- studydata_emotion_demo %&gt;% 
+  group_by(gender) %&gt;% 
+  summarise(
+    n    = n(),
+    mean = mean(neg_affect),
+    sd   = sd(neg_affect),
+    .groups = &quot;drop&quot;
+  )</code></pre>
+<pre class="r"><code>classyear_distress_summary &lt;- studydata_emotion_demo %&gt;% 
+  group_by(class_year) %&gt;% 
+  summarise(
+    n    = n(),
+    mean = mean(neg_affect),
+    sd   = sd(neg_affect),
+    .groups = &quot;drop&quot;
+  )</code></pre>
+<pre class="r"><code>combined_distress_summary &lt;- bind_rows(
+  overall_distress_summary %&gt;% 
+    mutate(
+      grouping = &quot;overall&quot;,
+      level    = &quot;all&quot;
+    ),
+  gender_distress_summary %&gt;% 
+    mutate(
+      grouping = &quot;gender&quot;,
+      level    = as.character(gender)
+    ) %&gt;% 
+    select(grouping, level, n, mean, sd),
+  classyear_distress_summary %&gt;% 
+    mutate(
+      grouping = &quot;class_year&quot;,
+      level    = as.character(class_year)
+    ) %&gt;% 
+    select(grouping, level, n, mean, sd)
+) %&gt;% 
+  relocate(grouping, level)</code></pre>
 </div>
 
 

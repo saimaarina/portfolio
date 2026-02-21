@@ -49,7 +49,6 @@ age_demo <- studydata_raw %>%
     id  = ID,
     age = Age
   )
-
 ```
 
 ```{r - joining demographics dataframes to neg affect}
@@ -59,5 +58,59 @@ studydata_emotion_demo <- studydata_emotion %>%
   left_join(age_demo,       by = "id")
 ```
 
+```{r - numeric summary for overall distress}
+overall_distress_summary <- studydata_emotion_demo %>% 
+  summarise(
+    n        = n(),
+    mean     = mean(neg_affect),
+    sd       = sd(neg_affect),
+    min      = min(neg_affect),
+    max      = max(neg_affect)
+  )
+```
 
+```{r - numeric summary for gender}
+gender_distress_summary <- studydata_emotion_demo %>% 
+  group_by(gender) %>% 
+  summarise(
+    n    = n(),
+    mean = mean(neg_affect),
+    sd   = sd(neg_affect),
+    .groups = "drop"
+  )
+```
+
+```{r - numeric summary for class year}
+classyear_distress_summary <- studydata_emotion_demo %>% 
+  group_by(class_year) %>% 
+  summarise(
+    n    = n(),
+    mean = mean(neg_affect),
+    sd   = sd(neg_affect),
+    .groups = "drop"
+  )
+```
+
+```{r - merging numerical summaries}
+combined_distress_summary <- bind_rows(
+  overall_distress_summary %>% 
+    mutate(
+      grouping = "overall",
+      level    = "all"
+    ),
+  gender_distress_summary %>% 
+    mutate(
+      grouping = "gender",
+      level    = as.character(gender)
+    ) %>% 
+    select(grouping, level, n, mean, sd),
+  classyear_distress_summary %>% 
+    mutate(
+      grouping = "class_year",
+      level    = as.character(class_year)
+    ) %>% 
+    select(grouping, level, n, mean, sd)
+) %>% 
+  relocate(grouping, level)
+```
 
