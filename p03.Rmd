@@ -52,4 +52,12 @@ age_demo <- studydata_raw %>%
 
 ```
 
+```{r - joining demographics dataframes to neg affect}
+studydata_emotion_demo <- studydata_emotion %>% 
+  left_join(gender_demo,    by = "id") %>% 
+  left_join(classyear_demo, by = "id") %>% 
+  left_join(age_demo,       by = "id")
+```
+
+
 
