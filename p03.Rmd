@@ -14,5 +14,21 @@ In this project, I build off of my earlier portfolio piece to explore how negati
 
 My products will include a cleaned analytic tibble that contains negative affect, gender, class year, and age, with gender and class year recoded into factor labels that are readable and removing any rows with values missing so the same complete‑case sample is used for all of the analyses. With this tibble, I created three visualizations: a plot of negative affect by gender, a plot of negative affect by class year, and a scatterplot of age versus negative affect with a smooth line to show any trend in distress across the narrow upper‑division age range. In addition to the graphs, I generated small summary tibbles reporting the mean and standard deviation of negative affect by gender and by class year, plus the overall mean, standard deviation, and range of negative affect for the full sample, so I can move between visual and numeric descriptions of the same patterns.
 
+```{r - loading data}
+library(tidyverse)
+library(haven)
+
+studydata_raw <- read_sav("AI Purpose Questions and Plan Clarity Study.sav") %>% 
+  as_tibble()
+```
+
+```{r - create dataframe to measure emotional distress scores}
+studydata_emotion <- studydata_raw %>% 
+  transmute(
+    id           = ID,
+    condition    = condition,         
+    neg_affect   = NegAff_Mean
+  )
+```
 
 
