@@ -415,6 +415,24 @@ age_demo &lt;- studydata_raw %&gt;%
     select(grouping, level, n, mean, sd)
 ) %&gt;% 
   relocate(grouping, level)</code></pre>
+<pre class="r"><code>p_distress_gender &lt;- ggplot(studydata_emotion_demo,
+                            aes(x = gender, y = neg_affect)) +
+  geom_boxplot(fill = &quot;steel blue&quot;, alpha = 0.7) +
+  labs(
+    title = &quot;Negative Affect by Gender&quot;,
+    x     = &quot;Gender&quot;,
+    y     = &quot;Negative affect (1–5)&quot;
+  ) +
+  theme_minimal()
+
+p_distress_gender</code></pre>
+<p><img src="p03_files/figure-html/-%20distress%20by%20gender%20plot-1.png" alt="" width="672" /></p>
+<p>Interpretation: It seems like the median distress score for females
+are slightly higher than males, with greater variability among women.
+The shorter boxplot of the males suggest that most men seem to cluster
+around a relative low affect. The two boxplots share a strong overlap,
+implying that gender is not a strong implicator in emotional distress
+for this sample.</p>
 </div>
 
 
