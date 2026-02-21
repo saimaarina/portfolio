@@ -130,3 +130,28 @@ p_distress_gender
 
 Interpretation: It seems like the median distress score for females are slightly higher than males, with greater variability among women. The shorter boxplot of the males suggest that most men seem to cluster around a relative low affect. The two boxplots share a strong overlap, implying that gender is not a strong implicator in emotional distress for this sample.
 
+```{r - distress by class year plot}
+p_distress_classyear <- ggplot(studydata_emotion_demo,
+                               aes(x = class_year,
+                                   y = neg_affect,
+                                   fill = factor(class_year))) +
+  geom_boxplot(alpha = 0.7) +
+  scale_fill_manual(
+    name   = "Class year",
+    values = c("3" = "steel blue", "4" = "light green"),
+    labels = c("3" = "Junior", "4" = "Senior")
+  ) +
+  labs(
+    title = "Negative Affect by Class Year",
+    x     = "Class year",
+    y     = "Negative affect (1–5)"
+  ) +
+  theme_minimal()
+
+p_distress_classyear
+```
+
+
+Interpretation: Juniors and seniors seem to report similar overall levels of negative affect. The median for seniors are slightly higher, which may possibly be from feeling a bit more distress on average. I would say that the variation between the two class years is larger than differences between them. 
+
+
