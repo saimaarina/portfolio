@@ -457,6 +457,28 @@ levels of negative affect. The median for seniors are slightly higher,
 which may possibly be from feeling a bit more distress on average. I
 would say that the variation between the two class years is larger than
 differences between them.</p>
+<pre class="r"><code>p_distress_age &lt;- ggplot(studydata_emotion_demo,
+                         aes(x = age, y = neg_affect)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = &quot;loess&quot;, se = TRUE, color = &quot;darkred&quot;) +
+  labs(
+    title = &quot;Negative Affect Across Age&quot;,
+    x     = &quot;Age (years)&quot;,
+    y     = &quot;Negative affect (1–5)&quot;
+  ) +
+  theme_minimal()
+
+p_distress_age</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="p03_files/figure-html/-%20scatterplot%20of%20age%20vs%20distress-1.png" alt="" width="672" /></p>
+<p>Interpretation: From the scatterplot, there seems to be a fairly low
+variation in negative affect overall. I notice a clustering in the
+upper-division age range, with the thought that most seniors are likely
+around 22-23 years old at graduation. The smoothed line shows a slight
+uptick in negative affect in the early‑twenties range, which could
+reflect that students closer to graduation feel somewhat more distress
+as they approach the transition out of college, though the effect is
+small and imprecise given the wide confidence band.</p>
 </div>
 
 
