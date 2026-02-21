@@ -350,6 +350,23 @@ studydata_raw &lt;- read_sav(&quot;AI Purpose Questions and Plan Clarity Study.s
     condition    = condition,         
     neg_affect   = NegAff_Mean
   )</code></pre>
+<pre class="r"><code>gender_demo &lt;- studydata_raw %&gt;% 
+  transmute(
+    id     = ID,
+    gender = Gender
+  )
+
+classyear_demo &lt;- studydata_raw %&gt;% 
+  transmute(
+    id         = ID,
+    class_year = Study_Year
+  )
+
+age_demo &lt;- studydata_raw %&gt;% 
+  transmute(
+    id  = ID,
+    age = Age
+  )</code></pre>
 </div>
 
 

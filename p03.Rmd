@@ -31,4 +31,25 @@ studydata_emotion <- studydata_raw %>%
   )
 ```
 
+```{r - creating new demographics dataframe}
+gender_demo <- studydata_raw %>% 
+  transmute(
+    id     = ID,
+    gender = Gender
+  )
+
+classyear_demo <- studydata_raw %>% 
+  transmute(
+    id         = ID,
+    class_year = Study_Year
+  )
+
+age_demo <- studydata_raw %>% 
+  transmute(
+    id  = ID,
+    age = Age
+  )
+
+```
+
 
