@@ -1,5 +1,18 @@
 ---
-title: "Portfolio 3"
+title: "Portfolio 3 - Individual Differences Within AI Question Framing and Emotional
+  Responses to Purpose Reflection in College Upperclassmen"
 ---
 
-> The projects should be numbered consecutively (i.e., in the order in which you began them), and should include for each project a description of the goal, the product (computer program, hand graph, computer graph, etc.), the data, and some interpretation. Reports must be reproducible and of high quality in terms of writing, grammar, presentation, etc.
+### Goal
+
+
+In this project, I build off of my earlier portfolio piece to explore how negative affect varies across individual‑difference variables in my AI post‑graduation planning study, focusing on gender, class year, and age as a baseline descriptive step before I add psychological traits like openness in later work. With this, I want to practice building a clean analytic tibble from my SPSS export, create multiple ggplot visualizations of distress across groups, and add simple numeric summaries that connect directly to the figures.  The original study recruited 60 U.S. juniors and seniors to report their post‑graduation plan clarity, respond to either two specific or two open‑ended AI‑generated purpose questions, and then rate their negative affect, with the main finding that higher plan clarity predicted lower distress while AI question type and its interaction with clarity were non‑significant. 
+
+
+
+### Products
+
+My products will include a cleaned analytic tibble that contains negative affect, gender, class year, and age, with gender and class year recoded into factor labels that are readable and removing any rows with values missing so the same complete‑case sample is used for all of the analyses. With this tibble, I created three visualizations: a plot of negative affect by gender, a plot of negative affect by class year, and a scatterplot of age versus negative affect with a smooth line to show any trend in distress across the narrow upper‑division age range. In addition to the graphs, I generated small summary tibbles reporting the mean and standard deviation of negative affect by gender and by class year, plus the overall mean, standard deviation, and range of negative affect for the full sample, so I can move between visual and numeric descriptions of the same patterns.
+
+
+
