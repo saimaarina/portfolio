@@ -14,3 +14,12 @@ The primary goal of this portfolio piece is to visualize how openness to experie
 For this portfolio, I will create several products that together tell a clear story about openness in an MTurk adult sample. First, I will generate a descriptive statistics table summarizing openness, self‑esteem, satisfaction with life, need for cognition, age, and gender proportions. Next, I will present a polished correlation matrix figure that highlights how openness relates positively to self‑esteem and need for cognition, but is largely independent of life satisfaction, age, and gender. I will then include a set of scatterplots with regression lines (openness with self‑esteem, need for cognition, and satisfaction) to visually contrast meaningful versus near‑zero relationships. In addition, I will show a gender comparison plot (boxplot or violin) for openness, and optionally self‑esteem and need for cognition, to illustrate the minimal gender differences in these traits.
 
 
+```{r - loading data}
+library(tidyverse)
+library(haven)
+
+mTurk_raw <- read_sav("OnlinePsychologySurveyData.sav") %>% 
+  as_tibble()
+```
+
+
