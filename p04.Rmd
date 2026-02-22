@@ -72,6 +72,16 @@ cor_matrix <- cor(cor_vars, use = "pairwise.complete.obs")
 cor_matrix
 ```
 
+```{r - loading psych}
+library(psych)
+
+psych::corr.test(cor_vars)
+
+cor_results <- psych::corr.test(cor_vars)
+cor_results$r      # correlation coefficients
+cor_results$p      # p-values
+
+```
 
 
 
