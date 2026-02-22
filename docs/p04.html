@@ -378,6 +378,44 @@ glimpse(mTurk_correlates)</code></pre>
 ## $ nfc          &lt;dbl&gt; 4.388889, 1.333333, 3.888889, 3.666667, 3.833333, 3.33333…
 ## $ age          &lt;dbl&gt; 22, 34, 43, 33, 41, 31, 56, 26, 37, 61, 44, 34, 37, 21, 3…
 ## $ gender       &lt;fct&gt; Female, Female, Female, Female, Female, Female, Male, Mal…</code></pre>
+<pre class="r"><code>mTurk_correlates %&gt;% 
+  summarise(
+    n           = n(),
+    mean_open   = mean(openness, na.rm = TRUE),
+    sd_open     = sd(openness, na.rm = TRUE),
+    mean_se     = mean(self_esteem, na.rm = TRUE),
+    sd_se       = sd(self_esteem, na.rm = TRUE),
+    mean_satis  = mean(satisfaction, na.rm = TRUE),
+    sd_satis    = sd(satisfaction, na.rm = TRUE),
+    mean_nfc    = mean(nfc, na.rm = TRUE),
+    sd_nfc      = sd(nfc, na.rm = TRUE),
+    mean_age    = mean(age, na.rm = TRUE),
+    sd_age      = sd(age, na.rm = TRUE)
+  )</code></pre>
+<pre><code>## # A tibble: 1 × 11
+##       n mean_open sd_open mean_se sd_se mean_satis sd_satis mean_nfc sd_nfc
+##   &lt;int&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;
+## 1   300      4.99    1.39    3.24 0.551       3.25     1.04     3.37  0.951
+## # ℹ 2 more variables: mean_age &lt;dbl&gt;, sd_age &lt;dbl&gt;</code></pre>
+<pre class="r"><code>mTurk_correlates %&gt;% 
+  count(gender)</code></pre>
+<pre><code>## # A tibble: 3 × 2
+##   gender     n
+##   &lt;fct&gt;  &lt;int&gt;
+## 1 Male     154
+## 2 Female   145
+## 3 &lt;NA&gt;       1</code></pre>
+<pre class="r"><code>cor_vars &lt;- mTurk_correlates %&gt;% 
+  select(openness, self_esteem, satisfaction, nfc, age)
+
+cor_matrix &lt;- cor(cor_vars, use = &quot;pairwise.complete.obs&quot;)
+cor_matrix</code></pre>
+<pre><code>##                openness self_esteem satisfaction        nfc         age
+## openness     1.00000000   0.3285580   0.03354637 0.50006844  0.08964205
+## self_esteem  0.32855800   1.0000000   0.41328191 0.24387248  0.17926189
+## satisfaction 0.03354637   0.4132819   1.00000000 0.04792131 -0.09902516
+## nfc          0.50006844   0.2438725   0.04792131 1.00000000  0.02608334
+## age          0.08964205   0.1792619  -0.09902516 0.02608334  1.00000000</code></pre>
 </div>
 
 

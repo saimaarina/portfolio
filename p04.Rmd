@@ -44,6 +44,33 @@ mTurk_correlates <- mTurk_correlates %>%
 
 glimpse(mTurk_correlates)
 ```
+```{r - descriptive stats}
+mTurk_correlates %>% 
+  summarise(
+    n           = n(),
+    mean_open   = mean(openness, na.rm = TRUE),
+    sd_open     = sd(openness, na.rm = TRUE),
+    mean_se     = mean(self_esteem, na.rm = TRUE),
+    sd_se       = sd(self_esteem, na.rm = TRUE),
+    mean_satis  = mean(satisfaction, na.rm = TRUE),
+    sd_satis    = sd(satisfaction, na.rm = TRUE),
+    mean_nfc    = mean(nfc, na.rm = TRUE),
+    sd_nfc      = sd(nfc, na.rm = TRUE),
+    mean_age    = mean(age, na.rm = TRUE),
+    sd_age      = sd(age, na.rm = TRUE)
+  )
+
+mTurk_correlates %>% 
+  count(gender)
+```
+
+```{r - correlation matrix}
+cor_vars <- mTurk_correlates %>% 
+  select(openness, self_esteem, satisfaction, nfc, age)
+
+cor_matrix <- cor(cor_vars, use = "pairwise.complete.obs")
+cor_matrix
+```
 
 
 
