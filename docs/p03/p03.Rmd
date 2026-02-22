@@ -1,0 +1,206 @@
+---
+title: "Portfolio 3 - Individual Differences Within AI Question Framing and Emotional Responses to Purpose Reflection in College Upperclassmen"
+---
+
+### Goal
+
+
+In this project, I build off of my earlier portfolio piece to explore how negative affect varies across individual‑difference variables in my AI post‑graduation planning study, focusing on gender, class year, and age as a baseline descriptive step before I add psychological traits like openness in later work. With this, I want to practice building a clean analytic tibble from my SPSS export, create multiple ggplot visualizations of distress across groups, and add simple numeric summaries that connect directly to the figures.  The original study recruited 60 U.S. juniors and seniors to report their post‑graduation plan clarity, respond to either two specific or two open‑ended AI‑generated purpose questions, and then rate their negative affect, with the main finding that higher plan clarity predicted lower distress while AI question type and its interaction with clarity were non‑significant. 
+
+
+
+### Products
+
+My products will include a cleaned analytic tibble that contains negative affect, gender, class year, and age, along with their individual dataframes. From this tibble I created several visualizations: boxplots of negative affect by gender and by class year, a scatterplot of negative affect across age with a smoothed trend line, and a faceted version of the age–distress plot split by gender to examine whether age‑related patterns look different within this group. In addition, I generated small summary tables that report the overall mean, standard deviation, and range of negative affect, as well as group‑level means and standard deviations by gender and by class year, plus a combined summary tibble that stacks these results into one place for quick reference alongside the plots.
+
+```{r - loading data}
+library(tidyverse)
+library(haven)
+
+studydata_raw <- read_sav("AI Purpose Questions and Plan Clarity Study.sav") %>% 
+  as_tibble()
+```
+
+```{r - create dataframe to measure emotional distress scores}
+studydata_emotion <- studydata_raw %>% 
+  transmute(
+    id           = ID,
+    condition    = condition,         
+    neg_affect   = NegAff_Mean
+  )
+```
+
+```{r - creating new demographics dataframe}
+gender_demo <- studydata_raw %>% 
+  transmute(
+    id     = ID,
+    gender = Gender
+  )
+
+classyear_demo <- studydata_raw %>% 
+  transmute(
+    id         = ID,
+    class_year = Study_Year
+  )
+
+age_demo <- studydata_raw %>% 
+  transmute(
+    id  = ID,
+    age = Age
+  )
+```
+
+```{r - joining demographics dataframes to neg affect}
+studydata_emotion_demo <- studydata_emotion %>% 
+  left_join(gender_demo,    by = "id") %>% 
+  left_join(classyear_demo, by = "id") %>% 
+  left_join(age_demo,       by = "id")
+```
+
+```{r - numeric summary for overall distress}
+overall_distress_summary <- studydata_emotion_demo %>% 
+  summarise(
+    n        = n(),
+    mean     = mean(neg_affect),
+    sd       = sd(neg_affect),
+    min      = min(neg_affect),
+    max      = max(neg_affect)
+  )
+```
+
+```{r - numeric summary for gender}
+gender_distress_summary <- studydata_emotion_demo %>% 
+  group_by(gender) %>% 
+  summarise(
+    n    = n(),
+    mean = mean(neg_affect),
+    sd   = sd(neg_affect),
+    .groups = "drop"
+  )
+```
+
+```{r - numeric summary for class year}
+classyear_distress_summary <- studydata_emotion_demo %>% 
+  group_by(class_year) %>% 
+  summarise(
+    n    = n(),
+    mean = mean(neg_affect),
+    sd   = sd(neg_affect),
+    .groups = "drop"
+  )
+```
+
+```{r - merging numerical summaries}
+combined_distress_summary <- bind_rows(
+  overall_distress_summary %>% 
+    mutate(
+      grouping = "overall",
+      level    = "all"
+    ),
+  gender_distress_summary %>% 
+    mutate(
+      grouping = "gender",
+      level    = as.character(gender)
+    ) %>% 
+    select(grouping, level, n, mean, sd),
+  classyear_distress_summary %>% 
+    mutate(
+      grouping = "class_year",
+      level    = as.character(class_year)
+    ) %>% 
+    select(grouping, level, n, mean, sd)
+) %>% 
+  relocate(grouping, level)
+```
+
+```{r - distress by gender plot}
+p_distress_gender <- ggplot(studydata_emotion_demo,
+                            aes(x = gender, y = neg_affect)) +
+  geom_boxplot(fill = "steel blue", alpha = 0.7) +
+  labs(
+    title = "Negative Affect by Gender",
+    x     = "Gender",
+    y     = "Negative affect (1–5)"
+  ) +
+  theme_minimal()
+
+p_distress_gender
+```
+
+Interpretation: It seems like the median distress score for females are slightly higher than males, with greater variability among women. The shorter boxplot of the males suggest that most men seem to cluster around a relative low affect. The two boxplots share a strong overlap, implying that gender is not a strong implicator in emotional distress for this sample.
+
+```{r - distress by class year plot}
+p_distress_classyear <- ggplot(studydata_emotion_demo,
+                               aes(x = class_year,
+                                   y = neg_affect,
+                                   fill = factor(class_year))) +
+  geom_boxplot(alpha = 0.7) +
+  scale_fill_manual(
+    name   = "Class year",
+    values = c("3" = "steel blue", "4" = "light green"),
+    labels = c("3" = "Junior", "4" = "Senior")
+  ) +
+  labs(
+    title = "Negative Affect by Class Year",
+    x     = "Class year",
+    y     = "Negative affect (1–5)"
+  ) +
+  theme_minimal()
+
+p_distress_classyear
+```
+
+
+Interpretation: Juniors and seniors seem to report similar overall levels of negative affect. The median for seniors are slightly higher, which may possibly be from feeling a bit more distress on average. I would say that the variation between the two class years is larger than differences between them. 
+
+
+```{r - scatterplot of age vs distress}
+p_distress_age <- ggplot(studydata_emotion_demo,
+                         aes(x = age, y = neg_affect)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "loess", se = TRUE, color = "darkred") +
+  labs(
+    title = "Negative Affect Across Age",
+    x     = "Age (years)",
+    y     = "Negative affect (1–5)"
+  ) +
+  theme_minimal()
+
+p_distress_age
+```
+
+
+Interpretation: From the scatterplot, there seems to be a fairly low variation in negative affect overall. I notice a clustering in the upper-division age range, with the thought that most seniors are likely around 22-23 years old at graduation. The smoothed line shows a slight uptick in negative affect in the early‑twenties range, which could reflect that students closer to graduation feel somewhat more distress as they approach the transition out of college, though the effect is small and imprecise given the wide confidence band.
+
+```{r - facet plot for age x gender}
+p_distress_age_gender <- ggplot(studydata_emotion_demo,
+                                aes(x = age, y = neg_affect)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "loess", se = TRUE, color = "darkred") +
+  facet_wrap(~ gender, nrow = 1) +
+  labs(
+    title = "Negative Affect Across Age by Gender",
+    x     = "Age (years)",
+    y     = "Negative affect (1–5)"
+  ) +
+  theme_minimal()
+
+p_distress_age_gender
+```
+
+
+Interpretation: The age‑by‑gender facets suggest that negative affect remains fairly flat across age for men but shows a modest upward trend for women in their early twenties, which can be a reflection of greater future-oriented worry among women as they approach graduation. I could infer possible reasons as to why: prior research has found that women often report higher levels of internalizing symptoms and women may feel more pressure from post-grad plans, careers, and expectations from society/family. 
+
+
+### Data
+
+The data come from my completed experiment on AI question framing and emotional distress among 60 U.S. juniors and seniors recruited through Prolific, who reported negative affect, demographics, and post‑graduation plan clarity as part of a Qualtrics survey exported to SPSS. I imported the original SPSS file into R using haven, converted it to a tibble (studydata_raw), and then reused the Portfolio‑1 code to create a distress‑focused dataset (studydata_emotion) containing ID, condition, and mean negative‑affect scores. For this project, I built separate demographic tibbles for gender, class year, and age from studydata_raw and joined them onto studydata_emotion by participant ID to form studydata_emotion_demo, which served as the basis for all of the numeric summaries and resulting visualizations.
+
+
+### Interpretation
+
+It seems from the visualizations that basic demographics are not strong dividers of negative affect in this dataset. This is reinforced by the scatterplot on age and facet plot on age x gender. Wide confidence bands make any small variations hard to distinguish from noise. What surprised me most was the age‑by‑gender pattern, where distress for men stays relatively flat while women show a more noticeable upward trend in negative affect in their early twenties, hinting that women closer to graduation might experience more future‑oriented worry than men, although the small sample means I treat this as descriptive rather than conclusive. Moving forward, these explorations make me more interested in psychological individual differences like plan clarity and, in my follow‑up study, openness to experience, as potential explanations for why some students feel more distressed than others, beyond what we can see from demographics alone.
+
+
+
+

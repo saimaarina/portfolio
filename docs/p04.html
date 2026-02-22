@@ -11,9 +11,9 @@
 
 
 
-<title>Portfolio 4</title>
+<title>Portfolio 4 - Openness and Well‑Being in MTurk Adults: Personality Correlates Informing an AI Chatbot Future‑Clarity Study</title>
 
-<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -141,11 +141,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -174,8 +178,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -183,16 +187,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -293,18 +290,55 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Portfolio 4</h1>
+<h1 class="title toc-ignore">Portfolio 4 - Openness and Well‑Being in
+MTurk Adults: Personality Correlates Informing an AI Chatbot
+Future‑Clarity Study</h1>
 
 </div>
 
 
-<blockquote>
-<p>The projects should be numbered consecutively (i.e., in the order in
-which you began them), and should include for each project a description
-of the goal, the product (computer program, hand graph, computer graph,
-etc.), the data, and some interpretation. Reports must be reproducible
-and of high quality in terms of writing, grammar, presentation, etc.</p>
-</blockquote>
+<div id="goal" class="section level3">
+<h3>Goal</h3>
+<p>My follow up study is adapting from a classmate’s study done on
+openness to experience, which found that individuals had a greater sense
+of their purpose in life after talking to an AI-chatbot on purpose
+discovery (they had a higher purpose in life measure), and this effect
+was greater in individuals with higher openness to experience. Thus,
+this portfolio piece will highlight as building background theory for
+the chatbot work. Together with personality data is support of the
+general idea: openness makes people more willing to explore, tolerate
+ambiguity, and try out new identity narratives in a semi‑novel context
+(an AI conversation). That mechanism is naturally extendable from “sense
+of purpose” to “future‑plan clarity,” because both involve imagining,
+evaluating, and committing to future directions. My hope is that I can
+then reasonably claim if openness amplifies gains in purpose after
+chatbot reflection, and openness is tied to self‑esteem but not just to
+general life satisfaction or demographics, then openness should also
+amplify gains in future‑plan clarity from a similar chatbot
+conversation.</p>
+<p>The primary goal of this portfolio piece is to visualize how openness
+to experience relates to self‑esteem, life satisfaction, need for
+cognition, age, and gender in an MTurk adult sample, and use this
+“openness profile” to motivate why openness should moderate gains in
+future‑plan clarity after an AI purpose‑discovery chatbot
+conversation.</p>
+</div>
+<div id="products" class="section level3">
+<h3>Products</h3>
+<p>For this portfolio, I will create several products that together tell
+a clear story about openness in an MTurk adult sample. First, I will
+generate a descriptive statistics table summarizing openness,
+self‑esteem, satisfaction with life, need for cognition, age, and gender
+proportions. Next, I will present a polished correlation matrix figure
+that highlights how openness relates positively to self‑esteem and need
+for cognition, but is largely independent of life satisfaction, age, and
+gender. I will then include a set of scatterplots with regression lines
+(openness with self‑esteem, need for cognition, and satisfaction) to
+visually contrast meaningful versus near‑zero relationships. In
+addition, I will show a gender comparison plot (boxplot or violin) for
+openness, and optionally self‑esteem and need for cognition, to
+illustrate the minimal gender differences in these traits.</p>
+</div>
 
 
 
