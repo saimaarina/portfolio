@@ -476,6 +476,21 @@ This is supportive of the theory that openness is linked to more
 self-confidence, which can support in explaining why individuals with
 higher openness might engage in a more constructive manner with an AI
 chatbot about their future plans.</p>
+<pre class="r"><code>ggplot(mTurk_correlates, aes(x = openness, y = satisfaction)) +
+  geom_point(alpha = 0.4) +
+  geom_smooth(method = &quot;lm&quot;, se = FALSE, color = &quot;brown&quot;) +
+  labs(
+    x = &quot;Openness to Experience&quot;,
+    y = &quot;Satisfaction&quot;,
+    title = &quot;Openness and Satisfaction with Life in MTurk Adults&quot;
+  )</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="p04_files/figure-html/-%20openness%20x%20satisfaction-1.png" alt="" width="672" /></p>
+<p>Interpretation: This plot shows that openness is essentially
+unrelated to life satisfaction in your MTurk sample. The regression line
+is almost flat, and points are widely scattered across satisfaction
+levels at every openness score. More open adults do not report being
+generally more satisfied with their lives.</p>
 </div>
 
 
