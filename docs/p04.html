@@ -491,6 +491,22 @@ unrelated to life satisfaction in your MTurk sample. The regression line
 is almost flat, and points are widely scattered across satisfaction
 levels at every openness score. More open adults do not report being
 generally more satisfied with their lives.</p>
+<pre class="r"><code>ggplot(mTurk_correlates, aes(x = openness, y = nfc)) +
+  geom_point(alpha = 0.4) +
+  geom_smooth(method = &quot;lm&quot;, se = FALSE, color = &quot;brown&quot;) +
+  labs(
+    x = &quot;Openness to Experience&quot;,
+    y = &quot;Need for Cognition&quot;,
+    title = &quot;Openness and Need for Cognition in MTurk Adults&quot;
+  )</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="p04_files/figure-html/-%20openness%20x%20NFC-1.png" alt="" width="672" /></p>
+<p>Interpretation: This figure shows a strong positive association
+between openness and need for cognition in your MTurk adults. As
+openness increases, the regression line rises steeply, and
+higher‑openness participants tend to report clearly higher enjoyment of
+effortful thinking. More open adults are not just curious; they also
+like engaging with complex, cognitively demanding tasks.</p>
 </div>
 
 
