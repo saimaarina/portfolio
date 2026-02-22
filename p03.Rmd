@@ -1,6 +1,5 @@
 ---
-title: "Portfolio 3 - Individual Differences Within AI Question Framing and Emotional
-  Responses to Purpose Reflection in College Upperclassmen"
+title: "Portfolio 3 - Individual Differences Within AI Question Framing and Emotional Responses to Purpose Reflection in College Upperclassmen"
 ---
 
 ### Goal
@@ -12,7 +11,7 @@ In this project, I build off of my earlier portfolio piece to explore how negati
 
 ### Products
 
-My products will include a cleaned analytic tibble that contains negative affect, gender, class year, and age, with gender and class year recoded into factor labels that are readable and removing any rows with values missing so the same complete‑case sample is used for all of the analyses. With this tibble, I created three visualizations: a plot of negative affect by gender, a plot of negative affect by class year, and a scatterplot of age versus negative affect with a smooth line to show any trend in distress across the narrow upper‑division age range. In addition to the graphs, I generated small summary tibbles reporting the mean and standard deviation of negative affect by gender and by class year, plus the overall mean, standard deviation, and range of negative affect for the full sample, so I can move between visual and numeric descriptions of the same patterns.
+My products will include a cleaned analytic tibble that contains negative affect, gender, class year, and age, along with their individual dataframes. From this tibble I created several visualizations: boxplots of negative affect by gender and by class year, a scatterplot of negative affect across age with a smoothed trend line, and a faceted version of the age–distress plot split by gender to examine whether age‑related patterns look different within this group. In addition, I generated small summary tables that report the overall mean, standard deviation, and range of negative affect, as well as group‑level means and standard deviations by gender and by class year, plus a combined summary tibble that stacks these results into one place for quick reference alongside the plots.
 
 ```{r - loading data}
 library(tidyverse)
@@ -191,6 +190,12 @@ p_distress_age_gender
 
 
 Interpretation: The age‑by‑gender facets suggest that negative affect remains fairly flat across age for men but shows a modest upward trend for women in their early twenties, which can be a reflection of greater future-oriented worry among women as they approach graduation. I could infer possible reasons as to why: prior research has found that women often report higher levels of internalizing symptoms and women may feel more pressure from post-grad plans, careers, and expectations from society/family. 
+
+
+### Data
+
+The data come from my completed experiment on AI question framing and emotional distress among 60 U.S. juniors and seniors recruited through Prolific, who reported negative affect, demographics, and post‑graduation plan clarity as part of a Qualtrics survey exported to SPSS. I imported the original SPSS file into R using haven, converted it to a tibble (studydata_raw), and then reused the Portfolio‑1 code to create a distress‑focused dataset (studydata_emotion) containing ID, condition, and mean negative‑affect scores. For this project, I built separate demographic tibbles for gender, class year, and age from studydata_raw and joined them onto studydata_emotion by participant ID to form studydata_emotion_demo, which served as the basis for all of the numeric summaries and resulting visualizations.
+
 
 
 
