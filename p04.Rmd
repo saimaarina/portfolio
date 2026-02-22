@@ -22,4 +22,31 @@ mTurk_raw <- read_sav("OnlinePsychologySurveyData.sav") %>%
   as_tibble()
 ```
 
+```{r - create dataframe to measure openness, self-esteem, satisfaction, nfc, age, and gender scores}
+mTurk_correlates <- mTurk_raw %>% 
+  transmute(
+    openness           = OPENNESS,
+    self_esteem    = SELFESTEEM,         
+    satisfaction   = SATISFACTION,
+    nfc = NFC,
+    age = Age,
+    gender = Gender
+  )
+```
+
+```{r - recoding gender}
+mTurk_correlates <- mTurk_correlates %>% 
+  mutate(
+    gender = factor(gender,
+                    levels = c(1, 2),
+                    labels = c("Male", "Female"))
+  )
+
+glimpse(mTurk_correlates)
+```
+
+
+
+
+
 
