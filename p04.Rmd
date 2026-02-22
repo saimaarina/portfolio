@@ -129,7 +129,7 @@ ggplot(mTurk_correlates, aes(x = openness, y = nfc)) +
 
 
 Interpretation: This figure shows a strong positive association between openness and need for cognition in your MTurk adults. As openness increases, the regression line rises steeply, and higher‑openness participants tend to report clearly higher enjoyment of effortful thinking. More open adults are not just curious; they also like engaging with complex, cognitively demanding tasks.
-The dataset comes from an online survey of 300 adult workers recruited through Amazon Mechanical Turk, who completed measures of openness to experience, self‑esteem, satisfaction with life, need for cognition, and basic demographics. This data was distributed in my Research Methods 1 class. Openness, self‑esteem, satisfaction, and NFC were each scored as averaged Likert‑type scales, with higher scores indicating greater levels of the underlying trait or attitude. Age was recorded in years (continuous), and gender was self‑reported using a binary male/female option in this sample.
+
 
 
 ```{r - gender and openness}
@@ -179,5 +179,10 @@ ggplot(mTurk_long,
   theme_minimal()
 ```
 
-Interpretation: Self‑esteem, life satisfaction, and need for cognition are broadly similar for male and female individuals In all three panels, the male and female boxplots have overlapping medians and interquartile ranges, with only small differences at most. Both openness and its key correlates (self‑esteem, satisfaction, NFC) are not strongly gendered in this sample
+Interpretation: Self‑esteem, life satisfaction, and need for cognition are broadly similar for male and female individuals In all three panels, the male and female boxplots have overlapping medians and interquartile ranges, with only small differences at most. Both openness and its key correlates (self‑esteem, satisfaction, NFC) are not strongly gendered in this sample.
+
+
+### Data
+
+The dataset comes from an online survey of 300 adult workers recruited through Amazon Mechanical Turk, who completed measures of openness to experience, self‑esteem, satisfaction with life, need for cognition, and basic demographics. This data was distributed in my Research Methods 1 class. Openness, self‑esteem, satisfaction, and NFC were each scored as averaged Likert‑type scales, with higher scores indicating greater levels of the underlying trait or attitude. Age was recorded in years (continuous), and gender was self‑reported using a binary male/female option in this sample.
 
