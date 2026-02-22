@@ -132,8 +132,17 @@ Interpretation: This figure shows a strong positive association between openness
 
 
 
+```{r - gender and openness}
+ggplot(mTurk_correlates, aes(x = gender, y = openness)) +
+  geom_boxplot(fill = "gray") +
+  labs(
+    x = "Gender",
+    y = "Openness to Experience",
+    title = "Openness by Gender in MTurk Adults"
+  )
+```
 
 
-
+Interpretation: Openness to experience is very similar for male and female MTurk workers in the sample. The medians for both genders are around the same value, with overlapping interquartile ranges and whiskers, indicating no substantial gender difference in openness scores. Openness appears to cut across gender in this adult online sample, and this reinforces the idea that it’s a psychological trait rather than a demographic marker.
 
 

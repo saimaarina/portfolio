@@ -507,6 +507,21 @@ openness increases, the regression line rises steeply, and
 higher‑openness participants tend to report clearly higher enjoyment of
 effortful thinking. More open adults are not just curious; they also
 like engaging with complex, cognitively demanding tasks.</p>
+<pre class="r"><code>ggplot(mTurk_correlates, aes(x = gender, y = openness)) +
+  geom_boxplot(fill = &quot;gray&quot;) +
+  labs(
+    x = &quot;Gender&quot;,
+    y = &quot;Openness to Experience&quot;,
+    title = &quot;Openness by Gender in MTurk Adults&quot;
+  )</code></pre>
+<p><img src="p04_files/figure-html/-%20gender%20and%20openness-1.png" alt="" width="672" /></p>
+<p>Interpretation: Openness to experience is very similar for male and
+female MTurk workers in the sample. The medians for both genders are
+around the same value, with overlapping interquartile ranges and
+whiskers, indicating no substantial gender difference in openness
+scores. Openness appears to cut across gender in this adult online
+sample, and this reinforces the idea that it’s a psychological trait
+rather than a demographic marker.</p>
 </div>
 
 
