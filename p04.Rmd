@@ -129,12 +129,14 @@ ggplot(mTurk_correlates, aes(x = openness, y = nfc)) +
 
 
 Interpretation: This figure shows a strong positive association between openness and need for cognition in your MTurk adults. As openness increases, the regression line rises steeply, and higher‑openness participants tend to report clearly higher enjoyment of effortful thinking. More open adults are not just curious; they also like engaging with complex, cognitively demanding tasks.
-
+The dataset comes from an online survey of 300 adult workers recruited through Amazon Mechanical Turk, who completed measures of openness to experience, self‑esteem, satisfaction with life, need for cognition, and basic demographics. This data was distributed in my Research Methods 1 class. Openness, self‑esteem, satisfaction, and NFC were each scored as averaged Likert‑type scales, with higher scores indicating greater levels of the underlying trait or attitude. Age was recorded in years (continuous), and gender was self‑reported using a binary male/female option in this sample.
 
 
 ```{r - gender and openness}
-ggplot(mTurk_correlates, aes(x = gender, y = openness)) +
-  geom_boxplot(fill = "gray") +
+ggplot(mTurk_correlates, aes(x = gender, y = openness, fill = gender)) +
+  geom_boxplot() +
+  scale_fill_manual(values = c("Male" = "red",
+                               "Female" = "green")) +
   labs(
     x = "Gender",
     y = "Openness to Experience",
@@ -145,4 +147,37 @@ ggplot(mTurk_correlates, aes(x = gender, y = openness)) +
 
 Interpretation: Openness to experience is very similar for male and female MTurk workers in the sample. The medians for both genders are around the same value, with overlapping interquartile ranges and whiskers, indicating no substantial gender difference in openness scores. Openness appears to cut across gender in this adult online sample, and this reinforces the idea that it’s a psychological trait rather than a demographic marker.
 
+
+
+```{r - facet of openness x correlates by gender}
+mTurk_long <- mTurk_correlates %>% 
+  filter(!is.na(gender)) %>% 
+  pivot_longer(
+    cols = c(self_esteem, satisfaction, nfc),
+    names_to = "outcome",
+    values_to = "score"
+  ) %>% 
+  mutate(
+    outcome = factor(
+      outcome,
+      levels = c("self_esteem", "satisfaction", "nfc"),
+      labels = c("Self-esteem", "Satisfaction with life", "Need for cognition")
+    )
+  )
+
+ggplot(mTurk_long,
+       aes(x = gender, y = score, fill = gender)) +
+  geom_boxplot(alpha = 0.6, width = 0.6) +
+  facet_wrap(~ outcome, nrow = 1) +
+  scale_fill_manual(values = c("Male" = "red", "Female" = "green")) +
+  labs(
+    x = "Gender",
+    y = "Scale score",
+    title = "Self-esteem, Satisfaction, and Need for Cognition by Gender in MTurk Adults"
+  ) +
+  theme(legend.position = "none") +
+  theme_minimal()
+```
+
+Interpretation: Self‑esteem, life satisfaction, and need for cognition are broadly similar for male and female individuals In all three panels, the male and female boxplots have overlapping medians and interquartile ranges, with only small differences at most. Both openness and its key correlates (self‑esteem, satisfaction, NFC) are not strongly gendered in this sample
 
