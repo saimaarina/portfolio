@@ -457,6 +457,17 @@ cor_results$r      # correlation coefficients</code></pre>
 ## satisfaction 5.627394e-01 8.347160e-14 0.000000e+00 1.000000e+00 0.4342838
 ## nfc          2.184852e-20 1.945801e-05 4.082191e-01 0.000000e+00 1.0000000
 ## age          1.213133e-01 1.825566e-03 8.685676e-02 6.527341e-01 0.0000000</code></pre>
+<pre class="r"><code>library(ggplot2)</code></pre>
+<pre class="r"><code>ggplot(mTurk_correlates, aes(x = openness, y = self_esteem)) +
+  geom_point(alpha = 0.4) +
+  geom_smooth(method = &quot;lm&quot;, se = FALSE, color = &quot;brown&quot;) +
+  labs(
+    x = &quot;Openness to Experience&quot;,
+    y = &quot;Self-esteem&quot;,
+    title = &quot;Openness and Self-esteem in MTurk Adults&quot;
+  )</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="p04_files/figure-html/-%20openness%20x%20self%20esteem-1.png" alt="" width="672" /></p>
 </div>
 
 

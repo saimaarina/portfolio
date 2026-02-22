@@ -83,6 +83,20 @@ cor_results$p      # p-values
 
 ```
 
+```{r}
+library(ggplot2)
+```
+
+```{r - openness x self esteem}
+ggplot(mTurk_correlates, aes(x = openness, y = self_esteem)) +
+  geom_point(alpha = 0.4) +
+  geom_smooth(method = "lm", se = FALSE, color = "brown") +
+  labs(
+    x = "Openness to Experience",
+    y = "Self-esteem",
+    title = "Openness and Self-esteem in MTurk Adults"
+  )
+```
 
 
 
