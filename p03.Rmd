@@ -173,5 +173,24 @@ p_distress_age
 
 Interpretation: From the scatterplot, there seems to be a fairly low variation in negative affect overall. I notice a clustering in the upper-division age range, with the thought that most seniors are likely around 22-23 years old at graduation. The smoothed line shows a slight uptick in negative affect in the early‑twenties range, which could reflect that students closer to graduation feel somewhat more distress as they approach the transition out of college, though the effect is small and imprecise given the wide confidence band.
 
+```{r - facet plot for age x gender}
+p_distress_age_gender <- ggplot(studydata_emotion_demo,
+                                aes(x = age, y = neg_affect)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "loess", se = TRUE, color = "darkred") +
+  facet_wrap(~ gender, nrow = 1) +
+  labs(
+    title = "Negative Affect Across Age by Gender",
+    x     = "Age (years)",
+    y     = "Negative affect (1–5)"
+  ) +
+  theme_minimal()
+
+p_distress_age_gender
+```
+
+
+Interpretation: The age‑by‑gender facets suggest that negative affect remains fairly flat across age for men but shows a modest upward trend for women in their early twenties, which can be a reflection of greater future-oriented worry among women as they approach graduation. I could infer possible reasons as to why: prior research has found that women often report higher levels of internalizing symptoms and women may feel more pressure from post-grad plans, careers, and expectations from society/family. 
+
 
 

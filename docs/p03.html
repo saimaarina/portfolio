@@ -479,6 +479,52 @@ uptick in negative affect in the early‑twenties range, which could
 reflect that students closer to graduation feel somewhat more distress
 as they approach the transition out of college, though the effect is
 small and imprecise given the wide confidence band.</p>
+<pre class="r"><code>p_distress_age_gender &lt;- ggplot(studydata_emotion_demo,
+                                aes(x = age, y = neg_affect)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = &quot;loess&quot;, se = TRUE, color = &quot;darkred&quot;) +
+  facet_wrap(~ gender, nrow = 1) +
+  labs(
+    title = &quot;Negative Affect Across Age by Gender&quot;,
+    x     = &quot;Age (years)&quot;,
+    y     = &quot;Negative affect (1–5)&quot;
+  ) +
+  theme_minimal()
+
+p_distress_age_gender</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<pre><code>## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+## : pseudoinverse used at 21</code></pre>
+<pre><code>## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+## : neighborhood radius 1</code></pre>
+<pre><code>## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+## : reciprocal condition number 0</code></pre>
+<pre><code>## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+## : There are other near singularities as well. 1</code></pre>
+<pre><code>## Warning in predLoess(object$y, object$x, newx = if (is.null(newdata)) object$x
+## else if (is.data.frame(newdata))
+## as.matrix(model.frame(delete.response(terms(object)), : pseudoinverse used at
+## 21</code></pre>
+<pre><code>## Warning in predLoess(object$y, object$x, newx = if (is.null(newdata)) object$x
+## else if (is.data.frame(newdata))
+## as.matrix(model.frame(delete.response(terms(object)), : neighborhood radius 1</code></pre>
+<pre><code>## Warning in predLoess(object$y, object$x, newx = if (is.null(newdata)) object$x
+## else if (is.data.frame(newdata))
+## as.matrix(model.frame(delete.response(terms(object)), : reciprocal condition
+## number 0</code></pre>
+<pre><code>## Warning in predLoess(object$y, object$x, newx = if (is.null(newdata)) object$x
+## else if (is.data.frame(newdata))
+## as.matrix(model.frame(delete.response(terms(object)), : There are other near
+## singularities as well. 1</code></pre>
+<p><img src="p03_files/figure-html/-%20facet%20plot%20for%20age%20x%20gender-1.png" alt="" width="672" /></p>
+<p>Interpretation: The age‑by‑gender facets suggest that negative affect
+remains fairly flat across age for men but shows a modest upward trend
+for women in their early twenties, which can be a reflection of greater
+future-oriented worry among women as they approach graduation. I could
+infer possible reasons as to why: prior research has found that women
+often report higher levels of internalizing symptoms and women may feel
+more pressure from post-grad plans, careers, and expectations from
+society/family.</p>
 </div>
 
 
