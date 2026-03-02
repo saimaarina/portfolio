@@ -171,3 +171,81 @@ big5 <- big5 %>%
 ```
 
 
+```{r - testing main effect}
+m_main <- lm(openness ~ extraversion + agreeableness +
+               conscientiousness + emotional_stability + age_18_23,
+             data = big5)
+
+m_int <- lm(openness ~ (extraversion + agreeableness +
+                          conscientiousness + emotional_stability) * age_18_23,
+            data = big5)
+
+summary(m_int)
+anova(m_main, m_int)   
+```
+```{r - plot of openness by age group}
+library(dplyr)
+
+big5_summ <- big5 %>%
+  group_by(age_18_23) %>%
+  summarise(
+    n   = n(),
+    mean_open = mean(openness, na.rm = TRUE),
+    sd_open   = sd(openness, na.rm = TRUE),
+    se_open   = sd_open / sqrt(n),
+    ci_low    = mean_open - 1.96 * se_open,
+    ci_high   = mean_open + 1.96 * se_open
+  )
+
+ggplot(big5_summ,
+       aes(x = age_18_23, y = mean_open)) +
+  geom_point(size = 3) +
+  geom_errorbar(aes(ymin = ci_low, ymax = ci_high),
+                width = 0.1, size = 0.9) +
+  labs(x = "Age group",
+       y = "Mean openness",
+       title = "Openness levels in 18–23 vs 24+ adults") +
+  theme_minimal(base_size = 12)
+```
+
+Interpretation: Mean openness scores were similar for emerging adults (18–23; wide confidence interval) and adults aged 24 and older, suggesting that openness levels in my planned college‑aged sample are broadly comparable to those observed in older adults in this MTurk dataset.
+
+
+
+```{r - age group of 18 to 23}
+big5_18_23 <- big5 %>%
+  filter(age >= 18, age <= 23) %>%
+  mutate(age_factor = factor(age, levels = 18:23))
+
+age_exact_summ <- big5_18_23 %>%
+  group_by(age_factor) %>%
+  summarise(
+    n   = n(),
+    mean_open = mean(openness, na.rm = TRUE),
+    sd_open   = sd(openness, na.rm = TRUE),
+    se_open   = sd_open / sqrt(n),
+    ci_low    = mean_open - 1.96 * se_open,
+    ci_high   = mean_open + 1.96 * se_open
+  )
+```
+
+
+
+
+```{r - plot for ages 18-23 individually (college aged)}
+ggplot(age_exact_summ,
+       aes(x = age_factor, y = mean_open, group = 1)) +
+  geom_point(size = 3) +
+  geom_line() +
+  geom_errorbar(aes(ymin = ci_low, ymax = ci_high),
+                width = 0.1, size = 0.9) +
+  labs(x = "Age (years)",
+       y = "Mean openness",
+       title = "Openness levels at ages 18–23") +
+  theme_minimal(base_size = 12)
+```
+
+Interpretation: Within the 20–23 range, mean openness scores fluctuated slightly by age but with wide, overlapping confidence intervals, suggesting no clear age trend in openness across these early emerging‑adult years.
+
+
+

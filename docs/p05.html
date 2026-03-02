@@ -557,6 +557,109 @@ associations and emotional stability show some modest contribution.</p>
     age_18_23 = ifelse(age &gt;= 18 &amp; age &lt;= 23, &quot;18-23&quot;, &quot;24+&quot;),
     age_18_23 = factor(age_18_23, levels = c(&quot;24+&quot;, &quot;18-23&quot;))
   )</code></pre>
+<pre class="r"><code>m_main &lt;- lm(openness ~ extraversion + agreeableness +
+               conscientiousness + emotional_stability + age_18_23,
+             data = big5)
+
+m_int &lt;- lm(openness ~ (extraversion + agreeableness +
+                          conscientiousness + emotional_stability) * age_18_23,
+            data = big5)
+
+summary(m_int)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = openness ~ (extraversion + agreeableness + conscientiousness + 
+##     emotional_stability) * age_18_23, data = big5)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.2237 -0.8685  0.0084  0.9243  3.9627 
+## 
+## Coefficients:
+##                                    Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                         2.05082    0.38283   5.357 1.73e-07 ***
+## extraversion                        0.20984    0.04378   4.793 2.63e-06 ***
+## agreeableness                       0.22958    0.06316   3.635 0.000329 ***
+## conscientiousness                   0.10624    0.06505   1.633 0.103515    
+## emotional_stability                 0.07747    0.05562   1.393 0.164711    
+## age_18_2318-23                      3.66349    1.73220   2.115 0.035288 *  
+## extraversion:age_18_2318-23         0.69376    0.44840   1.547 0.122903    
+## agreeableness:age_18_2318-23       -0.33838    0.25398  -1.332 0.183816    
+## conscientiousness:age_18_2318-23   -0.19490    0.23051  -0.846 0.398515    
+## emotional_stability:age_18_2318-23 -0.66041    0.35417  -1.865 0.063237 .  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1.242 on 290 degrees of freedom
+## Multiple R-squared:  0.2277, Adjusted R-squared:  0.2037 
+## F-statistic: 9.498 on 9 and 290 DF,  p-value: 1.099e-12</code></pre>
+<pre class="r"><code>anova(m_main, m_int)   </code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: openness ~ extraversion + agreeableness + conscientiousness + 
+##     emotional_stability + age_18_23
+## Model 2: openness ~ (extraversion + agreeableness + conscientiousness + 
+##     emotional_stability) * age_18_23
+##   Res.Df    RSS Df Sum of Sq      F Pr(&gt;F)
+## 1    294 455.39                           
+## 2    290 447.35  4    8.0466 1.3041 0.2686</code></pre>
+<pre class="r"><code>library(dplyr)
+
+big5_summ &lt;- big5 %&gt;%
+  group_by(age_18_23) %&gt;%
+  summarise(
+    n   = n(),
+    mean_open = mean(openness, na.rm = TRUE),
+    sd_open   = sd(openness, na.rm = TRUE),
+    se_open   = sd_open / sqrt(n),
+    ci_low    = mean_open - 1.96 * se_open,
+    ci_high   = mean_open + 1.96 * se_open
+  )
+
+ggplot(big5_summ,
+       aes(x = age_18_23, y = mean_open)) +
+  geom_point(size = 3) +
+  geom_errorbar(aes(ymin = ci_low, ymax = ci_high),
+                width = 0.1, size = 0.9) +
+  labs(x = &quot;Age group&quot;,
+       y = &quot;Mean openness&quot;,
+       title = &quot;Openness levels in 18–23 vs 24+ adults&quot;) +
+  theme_minimal(base_size = 12)</code></pre>
+<p><img src="p05_files/figure-html/-%20plot%20of%20openness%20by%20age%20group-1.png" alt="" width="672" /></p>
+<p>Interpretation: Mean openness scores were similar for emerging adults
+(18–23; wide confidence interval) and adults aged 24 and older,
+suggesting that openness levels in my planned college‑aged sample are
+broadly comparable to those observed in older adults in this MTurk
+dataset.</p>
+<pre class="r"><code>big5_18_23 &lt;- big5 %&gt;%
+  filter(age &gt;= 18, age &lt;= 23) %&gt;%
+  mutate(age_factor = factor(age, levels = 18:23))
+
+age_exact_summ &lt;- big5_18_23 %&gt;%
+  group_by(age_factor) %&gt;%
+  summarise(
+    n   = n(),
+    mean_open = mean(openness, na.rm = TRUE),
+    sd_open   = sd(openness, na.rm = TRUE),
+    se_open   = sd_open / sqrt(n),
+    ci_low    = mean_open - 1.96 * se_open,
+    ci_high   = mean_open + 1.96 * se_open
+  )</code></pre>
+<pre class="r"><code>ggplot(age_exact_summ,
+       aes(x = age_factor, y = mean_open, group = 1)) +
+  geom_point(size = 3) +
+  geom_line() +
+  geom_errorbar(aes(ymin = ci_low, ymax = ci_high),
+                width = 0.1, size = 0.9) +
+  labs(x = &quot;Age (years)&quot;,
+       y = &quot;Mean openness&quot;,
+       title = &quot;Openness levels at ages 18–23&quot;) +
+  theme_minimal(base_size = 12)</code></pre>
+<p><img src="p05_files/figure-html/-%20plot%20for%20ages%2018-23%20individually%20(college%20aged)-1.png" alt="" width="672" /></p>
+<p>Interpretation: Within the 20–23 range, mean openness scores
+fluctuated slightly by age but with wide, overlapping confidence
+intervals, suggesting no clear age trend in openness across these early
+emerging‑adult years.</p>
 </div>
 
 
