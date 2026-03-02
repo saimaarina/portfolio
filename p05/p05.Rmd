@@ -1,0 +1,257 @@
+---
+title: "Portfolio 5 - Openness and the Big Five in Emerging Adulthood"
+---
+
+### Goal
+
+Expand on my previous portfolio piece looking at a sample from mTurk to observe patterns to further my future work on openness to experience. This portfolio piece will focus to test how well other Big Five traits (extraversion, agreeableness, conscientiousness, and emotional stability) predict openness to experience, and examine whether mean levels and predictors of openness are similar across emerging‑adult age groups (18–23, 23–25, 25–30) that parallel the target ages in my planned chatbot study.
+
+
+### Products
+
+This project will produce a cleaned Big Five dataset with TIPI‑based composite scores for extraversion, agreeableness, conscientiousness, emotional stability, and openness. I will create a correlation table showing how openness relates to the other four traits in the full MTurk sample, followed by a multiple regression model predicting openness from extraversion, agreeableness, conscientiousness, and emotional stability with standardized coefficients and overall model fit. I will derive age variables that capture the emerging‑adult bands 18–23, 23–25, and 25–30, and use these to compute and visualize mean openness and confidence intervals across age bands. Finally, I will run parallel regressions predicting openness within each age band and summarize them in a compact table, allowing me to compare whether the pattern of trait predictors is similar or different across emerging‑adult ages that map onto the target range for my planned chatbot study.
+
+
+```{r - loading data}
+library(tidyverse)
+library(haven)
+
+mTurk_raw <- read_sav("OnlinePsychologySurveyData.sav") %>% 
+  as_tibble()
+```
+
+```{r - create dataframe to measure openness and big 5 traits, age, and gender scores}
+big5 <- mTurk_raw %>% 
+  transmute(
+    openness           = OPENNESS,
+    extraversion    = EXTRAVERSION,         
+    agreeableness   = AGREEABLENESS,
+    conscientiousness = CONSCIENTIOUSNESS,
+    emotional_stability = EMOTIONALSTABILITY,
+    age = Age,
+    gender = Gender
+  )
+```
+
+```{r - recoding gender}
+big5 <- big5 %>% 
+  mutate(
+    gender = factor(gender,
+                    levels = c(1, 2),
+                    labels = c("Male", "Female"))
+  )
+
+glimpse(big5)
+```
+
+```{r - loading psych}
+library(psych)
+
+cor_vars <- big5 %>%
+  select(openness, extraversion, agreeableness, conscientiousness, emotional_stability)
+
+cor_results <- psych::corr.test(cor_vars, use = "pairwise")
+cor_results$r      # correlations
+cor_results$p      # p-values
+
+model_full <- lm(openness ~ extraversion + agreeableness +
+                   conscientiousness + emotional_stability,
+                 data = big5)
+
+cor_obj <- psych::corr.test(cor_vars, use = "pairwise")
+cor_mat <- cor_obj$r    
+
+summary(model_full)
+```
+```{r - heat map}
+cor_df <- cor_mat %>%
+  as.data.frame() %>%
+  tibble::rownames_to_column("var1") %>%
+  pivot_longer(-var1, names_to = "var2", values_to = "r")
+
+ggplot(cor_df, aes(x = var1, y = var2, fill = r)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(
+    low = "#2166ac", mid = "white", high = "#b2182b",
+    midpoint = 0, limits = c(-1, 1), name = "r"
+  ) +
+  geom_text(aes(label = sprintf("%.2f", r)), size = 3) +
+  coord_fixed() +
+  labs(x = NULL, y = NULL) +
+  theme_minimal(base_size = 12) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    panel.grid = element_blank()
+  )
+```
+
+Interpretation: Using AI, I created a heatmap that helps visualize the correlations among openness and the other Big 5 traits, showing a clear visual that shows which of the traits are most closely aligned to openness. Darker red means a stronger positive relationship; paler pink means a weaker positive one. Openness correlates .36 with extraversion, .34 with agreeableness, .28 with conscientiousness, and .25 with emotional stability. This means people higher in openness in this sample also tend to be somewhat more extraverted, agreeable, conscientious, and emotionally stable, but the relationships are moderate, not huge.
+
+```{r - single scatterplot with all smooth lines}
+plot_data <- big5 %>%
+  select(openness, extraversion, agreeableness,
+         conscientiousness, emotional_stability) %>%
+  mutate(across(everything(), scale)) %>%        # z-scores
+  as.data.frame() %>%
+  pivot_longer(
+    cols = c(extraversion, agreeableness,
+             conscientiousness, emotional_stability),
+    names_to = "predictor",
+    values_to = "x_value"
+  )
+
+ggplot(plot_data, aes(x = x_value, y = openness, color = predictor)) +
+  geom_point(alpha = 0.15, size = 1) +
+  geom_smooth(method = "lm", se = FALSE, size = 1.1) +
+  scale_color_brewer(palette = "Dark2",
+                     name = "Predictor",
+                     labels = c("Agreeableness", "Conscientiousness",
+                                "Emotional stability", "Extraversion")) +
+  labs(x = "Standardized predictor score",
+       y = "Standardized openness",
+       title = "Big Five predictors of openness") +
+  theme_minimal(base_size = 12)
+```
+
+Interpretation: Each line is showing the linear relationship between openness and a predictor, with each trait visualized through a different color. As shown in the figure, higher extraversion and emotional stability were most strongly associated with greater openness, with agreeableness and conscientiousness also positively related. This is because the steeper a line, the stronger the relationship. The upward slopes are saying that people who are higher on any of these traits also tend to be higher on openness in the sample. 
+
+
+```{r - creating a single coefficient plot to show all predictors}
+library(broom)
+
+model_full <- lm(openness ~ extraversion + agreeableness +
+                   agreeableness + conscientiousness +
+                   emotional_stability,
+                 data = big5)
+
+coef_df <- tidy(model_full, conf.int = TRUE) %>%
+  filter(term != "(Intercept)") %>%
+  mutate(term = recode(term,
+                       extraversion      = "Extraversion",
+                       agreeableness     = "Agreeableness",
+                       conscientiousness = "Conscientiousness",
+                       emotional_stability    = "Emotional stability"))
+
+ggplot(coef_df,
+       aes(x = estimate, y = term, xmin = conf.low, xmax = conf.high,
+           color = term)) +
+  geom_vline(xintercept = 0, linetype = 2, color = "gray50") +
+  geom_point(size = 2) +
+  geom_errorbarh(height = 0.15, size = 0.9) +
+  scale_color_brewer(palette = "Dark2", guide = "none") +
+  labs(x = "Unstandardized regression coefficient",
+       y = NULL,
+       title = "Regression coefficients predicting openness") +
+  theme_minimal(base_size = 12)
+```
+
+Interpretation: This plot shows how strongly each of the traits predicts openness when in the model all together. The lines estimate the 95% confidence interval. From this plot, it can be interpreted that all four traits have positive coefficients, so higher extraversion, emotional stability, conscientiousness, and agreeableness each predict higher openness when you adjust for the others. Since extraversion has the largest coefficient and its confidence interval is above 0, it would be the strongest unique predictor of openness in the model. Agreeableness and conscientiousness show significant positive associations and emotional stability show some modest contribution.
+
+
+```{r - creating age groups}
+big5 <- big5 %>%
+  mutate(
+    age_group = case_when(
+      age >= 18 & age <= 23 ~ "18-23",
+      age >  23 & age <= 25 ~ "23-25",
+      age >  25 & age <= 30 ~ "25-30",
+      age >  30             ~ "30+",
+      TRUE                  ~ NA_character_
+    ),
+    age_group = factor(age_group, levels = c("18-23", "23-25", "25-30", "30+"))
+  )
+```
+
+```{r - college ages}
+big5 <- big5 %>%
+  mutate(
+    age_18_23 = ifelse(age >= 18 & age <= 23, "18-23", "24+"),
+    age_18_23 = factor(age_18_23, levels = c("24+", "18-23"))
+  )
+```
+
+
+```{r - testing main effect}
+m_main <- lm(openness ~ extraversion + agreeableness +
+               conscientiousness + emotional_stability + age_18_23,
+             data = big5)
+
+m_int <- lm(openness ~ (extraversion + agreeableness +
+                          conscientiousness + emotional_stability) * age_18_23,
+            data = big5)
+
+summary(m_int)
+anova(m_main, m_int)   
+```
+```{r - plot of openness by age group}
+library(dplyr)
+
+big5_summ <- big5 %>%
+  group_by(age_18_23) %>%
+  summarise(
+    n   = n(),
+    mean_open = mean(openness, na.rm = TRUE),
+    sd_open   = sd(openness, na.rm = TRUE),
+    se_open   = sd_open / sqrt(n),
+    ci_low    = mean_open - 1.96 * se_open,
+    ci_high   = mean_open + 1.96 * se_open
+  )
+
+ggplot(big5_summ,
+       aes(x = age_18_23, y = mean_open)) +
+  geom_point(size = 3) +
+  geom_errorbar(aes(ymin = ci_low, ymax = ci_high),
+                width = 0.1, size = 0.9) +
+  labs(x = "Age group",
+       y = "Mean openness",
+       title = "Openness levels in 18–23 vs 24+ adults") +
+  theme_minimal(base_size = 12)
+```
+
+Interpretation: Mean openness scores were similar for emerging adults (18–23; wide confidence interval) and adults aged 24 and older, suggesting that openness levels in my planned college‑aged sample are broadly comparable to those observed in older adults in this MTurk dataset.
+
+
+
+```{r - age group of 18 to 23}
+big5_18_23 <- big5 %>%
+  filter(age >= 18, age <= 23) %>%
+  mutate(age_factor = factor(age, levels = 18:23))
+
+age_exact_summ <- big5_18_23 %>%
+  group_by(age_factor) %>%
+  summarise(
+    n   = n(),
+    mean_open = mean(openness, na.rm = TRUE),
+    sd_open   = sd(openness, na.rm = TRUE),
+    se_open   = sd_open / sqrt(n),
+    ci_low    = mean_open - 1.96 * se_open,
+    ci_high   = mean_open + 1.96 * se_open
+  )
+```
+
+
+
+
+```{r - plot for ages 18-23 individually (college aged)}
+ggplot(age_exact_summ,
+       aes(x = age_factor, y = mean_open, group = 1)) +
+  geom_point(size = 3) +
+  geom_line() +
+  geom_errorbar(aes(ymin = ci_low, ymax = ci_high),
+                width = 0.1, size = 0.9) +
+  labs(x = "Age (years)",
+       y = "Mean openness",
+       title = "Openness levels at ages 18–23") +
+  theme_minimal(base_size = 12)
+```
+
+Interpretation: Within the 20–23 range, mean openness scores fluctuated slightly by age but with wide, overlapping confidence intervals, suggesting no clear age trend in openness across these early emerging‑adult years.
+
+### Data
+
+The dataset comes from an online survey of 300 adult workers recruited through Amazon Mechanical Turk who completed a brief Big Five measure and basic demographics as part of a larger personality study distributed in my Research Methods 1 course. Personality traits were assessed with the Ten Item Personality Inventory (TIPI), a 10‑item measure in which participants rate adjective pairs on a 1–7 scale from strongly disagree to strongly agree. I computed composite scores for openness to experience, extraversion, agreeableness, conscientiousness, and emotional stability by reverse‑scoring the appropriate items and averaging the corresponding item pairs, so that higher scores reflect higher levels of each trait. Age was recorded in years as a continuous variable and used both in its raw form and to define emerging‑adult groupings (e.g., 18–23 vs 24+), and gender was self‑reported in this dataset using binary male/female response options.
+
+### Interpretation
+
+Openness in adults tends to travel with being more outgoing, warm, and somewhat more organized, and based on the visualizations from this piece, this openness‑plus‑plasticity profile looks similar in emerging adults and older adults. My friend’s finding that high openness predicts larger gains in purpose fits with the idea that people who are both open and socially engaged (more extraverted, agreeable) may be especially ready to explore and clarify purpose when interacting with a reflective chatbot, and this should generalize across the 18–30 age range I am planning to recruit.
+
