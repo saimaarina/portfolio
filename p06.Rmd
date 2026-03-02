@@ -9,3 +9,39 @@ For my Research Methods 1 class, I wrote a paper looking at narcissism and extra
 ### Products
 
 The products will include a correlation heatmap showing associations among narcissism, extraversion, group‑affiliation, and status seeking, two scatterplots with smooth lines depicting the bivariate relationships of narcissism with group‑affiliation and status seeking and a pair of bar or coefficient plots summarizing the hierarchical regression results, highlighting that extraversion uniquely predicts group‑affiliation while narcissism uniquely predicts status seeking when both are entered together.
+
+
+
+```{r - loading data}
+library(tidyverse)
+library(haven)
+
+mTurk_raw <- read_sav("OnlinePsychologySurveyData.sav") %>% 
+  as_tibble()
+```
+```{r - create dataframe to measure narcissism, extraversion, status seeking, and group affiliation}
+narc_cor <- mTurk_raw %>% 
+  transmute(
+    narcissism           = NARCISSISM,
+    extraversion    = EXTRAVERSION,         
+    group_aff   = GROUP,
+    status = STATUS,
+    age = Age,
+    gender = Gender
+  )
+```
+
+```{r - recoding gender}
+narc_cor <- narc_cor %>% 
+  mutate(
+    gender = factor(gender,
+                    levels = c(1, 2),
+                    labels = c("Male", "Female"))
+  )
+
+glimpse(narc_cor)
+```
+
+
+
+
