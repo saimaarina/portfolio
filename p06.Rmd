@@ -150,3 +150,21 @@ ggplot(coef_all,
 ```
 
 Interpretation: Based on the visual from the group-affiliation side, extraversion acts as a unique predictor wanting group affiliation, but narcissism does not add meaningful prediction once extraversion is controlled. From the status-seeking side, narcissism uniquely predicts status seeking, whereas extraversion does not uniquely matter for status once narcissism is included. 
+
+
+
+
+```{r - narcissism by gender}
+ggplot(narc_cor, aes(x = gender, y = narcissism, fill = gender)) +
+  geom_violin(alpha = 0.3, width = 0.9, trim = FALSE) +
+  geom_boxplot(width = 0.3, outlier.alpha = 0.3) +
+  scale_fill_brewer(palette = "Set2", guide = "none") +
+  labs(x = "Gender",
+       y = "Narcissism (NPI score)",
+       title = "Narcissism scores by gender") +
+  theme_minimal(base_size = 12)
+```
+
+Interpretation: I have always heard that narcissism as a trait is found higher in males than females, so I wanted to create this figure out of curiosity. From it, we see the male median is higher, and more of the male density sits at moderate to high narcissism scores. The figure is showing that based on this sample, men tend to score higher on narcissism than women, though there is still overlap (some women are high, and some men are low).
+
+
