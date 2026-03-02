@@ -405,6 +405,9 @@ cor_results$r      # correlations</code></pre>
                    conscientiousness + emotional_stability,
                  data = big5)
 
+cor_obj &lt;- psych::corr.test(cor_vars, use = &quot;pairwise&quot;)
+cor_mat &lt;- cor_obj$r    
+
 summary(model_full)</code></pre>
 <pre><code>## 
 ## Call:
@@ -428,6 +431,35 @@ summary(model_full)</code></pre>
 ## Residual standard error: 1.244 on 295 degrees of freedom
 ## Multiple R-squared:  0.2118, Adjusted R-squared:  0.2011 
 ## F-statistic: 19.82 on 4 and 295 DF,  p-value: 1.826e-14</code></pre>
+<pre class="r"><code>cor_df &lt;- cor_mat %&gt;%
+  as.data.frame() %&gt;%
+  tibble::rownames_to_column(&quot;var1&quot;) %&gt;%
+  pivot_longer(-var1, names_to = &quot;var2&quot;, values_to = &quot;r&quot;)
+
+ggplot(cor_df, aes(x = var1, y = var2, fill = r)) +
+  geom_tile(color = &quot;white&quot;) +
+  scale_fill_gradient2(
+    low = &quot;#2166ac&quot;, mid = &quot;white&quot;, high = &quot;#b2182b&quot;,
+    midpoint = 0, limits = c(-1, 1), name = &quot;r&quot;
+  ) +
+  geom_text(aes(label = sprintf(&quot;%.2f&quot;, r)), size = 3) +
+  coord_fixed() +
+  labs(x = NULL, y = NULL) +
+  theme_minimal(base_size = 12) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    panel.grid = element_blank()
+  )</code></pre>
+<p><img src="p05_files/figure-html/-%20heat%20map-1.png" alt="" width="672" /></p>
+<p>Interpretation: Using AI, I created a heatmap that helps visualize
+the correlations among openness and the other Big 5 traits, showing a
+clear visual that shows which of the traits are most closely aligned to
+openness. Darker red means a stronger positive relationship; paler pink
+means a weaker positive one. Openness correlates .36 with extraversion,
+.34 with agreeableness, .28 with conscientiousness, and .25 with
+emotional stability. This means people higher in openness in this sample
+also tend to be somewhat more extraverted, agreeable, conscientious, and
+emotionally stable, but the relationships are moderate, not huge.</p>
 </div>
 
 
