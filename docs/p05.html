@@ -460,6 +460,87 @@ means a weaker positive one. Openness correlates .36 with extraversion,
 emotional stability. This means people higher in openness in this sample
 also tend to be somewhat more extraverted, agreeable, conscientious, and
 emotionally stable, but the relationships are moderate, not huge.</p>
+<pre class="r"><code>plot_data &lt;- big5 %&gt;%
+  select(openness, extraversion, agreeableness,
+         conscientiousness, emotional_stability) %&gt;%
+  mutate(across(everything(), scale)) %&gt;%        # z-scores
+  as.data.frame() %&gt;%
+  pivot_longer(
+    cols = c(extraversion, agreeableness,
+             conscientiousness, emotional_stability),
+    names_to = &quot;predictor&quot;,
+    values_to = &quot;x_value&quot;
+  )
+
+ggplot(plot_data, aes(x = x_value, y = openness, color = predictor)) +
+  geom_point(alpha = 0.15, size = 1) +
+  geom_smooth(method = &quot;lm&quot;, se = FALSE, size = 1.1) +
+  scale_color_brewer(palette = &quot;Dark2&quot;,
+                     name = &quot;Predictor&quot;,
+                     labels = c(&quot;Agreeableness&quot;, &quot;Conscientiousness&quot;,
+                                &quot;Emotional stability&quot;, &quot;Extraversion&quot;)) +
+  labs(x = &quot;Standardized predictor score&quot;,
+       y = &quot;Standardized openness&quot;,
+       title = &quot;Big Five predictors of openness&quot;) +
+  theme_minimal(base_size = 12)</code></pre>
+<pre><code>## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+## ℹ Please use `linewidth` instead.
+## This warning is displayed once per session.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="p05_files/figure-html/-%20single%20scatterplot%20with%20all%20smooth%20lines-1.png" alt="" width="672" /></p>
+<p>Interpretation: Each line is showing the linear relationship between
+openness and a predictor, with each trait visualized through a different
+color. As shown in the figure, higher extraversion and emotional
+stability were most strongly associated with greater openness, with
+agreeableness and conscientiousness also positively related. This is
+because the steeper a line, the stronger the relationship. The upward
+slopes are saying that people who are higher on any of these traits also
+tend to be higher on openness in the sample.</p>
+<pre class="r"><code>library(broom)
+
+model_full &lt;- lm(openness ~ extraversion + agreeableness +
+                   agreeableness + conscientiousness +
+                   emotional_stability,
+                 data = big5)
+
+coef_df &lt;- tidy(model_full, conf.int = TRUE) %&gt;%
+  filter(term != &quot;(Intercept)&quot;) %&gt;%
+  mutate(term = recode(term,
+                       extraversion      = &quot;Extraversion&quot;,
+                       agreeableness     = &quot;Agreeableness&quot;,
+                       conscientiousness = &quot;Conscientiousness&quot;,
+                       emotional_stability    = &quot;Emotional stability&quot;))
+
+ggplot(coef_df,
+       aes(x = estimate, y = term, xmin = conf.low, xmax = conf.high,
+           color = term)) +
+  geom_vline(xintercept = 0, linetype = 2, color = &quot;gray50&quot;) +
+  geom_point(size = 2) +
+  geom_errorbarh(height = 0.15, size = 0.9) +
+  scale_color_brewer(palette = &quot;Dark2&quot;, guide = &quot;none&quot;) +
+  labs(x = &quot;Unstandardized regression coefficient&quot;,
+       y = NULL,
+       title = &quot;Regression coefficients predicting openness&quot;) +
+  theme_minimal(base_size = 12)</code></pre>
+<pre><code>## Warning: `geom_errorbarh()` was deprecated in ggplot2 4.0.0.
+## ℹ Please use the `orientation` argument of `geom_errorbar()` instead.
+## This warning is displayed once per session.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.</code></pre>
+<pre><code>## `height` was translated to `width`.</code></pre>
+<p><img src="p05_files/figure-html/-%20creating%20a%20single%20coefficient%20plot%20to%20show%20all%20predictors-1.png" alt="" width="672" /></p>
+<p>Interpretation: This plot shows how strongly each of the traits
+predicts openness when in the model all together. The lines estimate the
+95% confidence interval. From this plot, it can be interpreted that all
+four traits have positive coefficients, so higher extraversion,
+emotional stability, conscientiousness, and agreeableness each predict
+higher openness when you adjust for the others. Since extraversion has
+the largest coefficient and its confidence interval is above 0, it would
+be the strongest unique predictor of openness in the model.
+Agreeableness and conscientiousness show significant positive
+associations and emotional stability show some modest contribution.</p>
 </div>
 
 

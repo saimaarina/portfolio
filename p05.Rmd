@@ -87,3 +87,66 @@ ggplot(cor_df, aes(x = var1, y = var2, fill = r)) +
 
 Interpretation: Using AI, I created a heatmap that helps visualize the correlations among openness and the other Big 5 traits, showing a clear visual that shows which of the traits are most closely aligned to openness. Darker red means a stronger positive relationship; paler pink means a weaker positive one. Openness correlates .36 with extraversion, .34 with agreeableness, .28 with conscientiousness, and .25 with emotional stability. This means people higher in openness in this sample also tend to be somewhat more extraverted, agreeable, conscientious, and emotionally stable, but the relationships are moderate, not huge.
 
+```{r - single scatterplot with all smooth lines}
+plot_data <- big5 %>%
+  select(openness, extraversion, agreeableness,
+         conscientiousness, emotional_stability) %>%
+  mutate(across(everything(), scale)) %>%        # z-scores
+  as.data.frame() %>%
+  pivot_longer(
+    cols = c(extraversion, agreeableness,
+             conscientiousness, emotional_stability),
+    names_to = "predictor",
+    values_to = "x_value"
+  )
+
+ggplot(plot_data, aes(x = x_value, y = openness, color = predictor)) +
+  geom_point(alpha = 0.15, size = 1) +
+  geom_smooth(method = "lm", se = FALSE, size = 1.1) +
+  scale_color_brewer(palette = "Dark2",
+                     name = "Predictor",
+                     labels = c("Agreeableness", "Conscientiousness",
+                                "Emotional stability", "Extraversion")) +
+  labs(x = "Standardized predictor score",
+       y = "Standardized openness",
+       title = "Big Five predictors of openness") +
+  theme_minimal(base_size = 12)
+```
+
+Interpretation: Each line is showing the linear relationship between openness and a predictor, with each trait visualized through a different color. As shown in the figure, higher extraversion and emotional stability were most strongly associated with greater openness, with agreeableness and conscientiousness also positively related. This is because the steeper a line, the stronger the relationship. The upward slopes are saying that people who are higher on any of these traits also tend to be higher on openness in the sample. 
+
+
+```{r - creating a single coefficient plot to show all predictors}
+library(broom)
+
+model_full <- lm(openness ~ extraversion + agreeableness +
+                   agreeableness + conscientiousness +
+                   emotional_stability,
+                 data = big5)
+
+coef_df <- tidy(model_full, conf.int = TRUE) %>%
+  filter(term != "(Intercept)") %>%
+  mutate(term = recode(term,
+                       extraversion      = "Extraversion",
+                       agreeableness     = "Agreeableness",
+                       conscientiousness = "Conscientiousness",
+                       emotional_stability    = "Emotional stability"))
+
+ggplot(coef_df,
+       aes(x = estimate, y = term, xmin = conf.low, xmax = conf.high,
+           color = term)) +
+  geom_vline(xintercept = 0, linetype = 2, color = "gray50") +
+  geom_point(size = 2) +
+  geom_errorbarh(height = 0.15, size = 0.9) +
+  scale_color_brewer(palette = "Dark2", guide = "none") +
+  labs(x = "Unstandardized regression coefficient",
+       y = NULL,
+       title = "Regression coefficients predicting openness") +
+  theme_minimal(base_size = 12)
+```
+
+Interpretation: This plot shows how strongly each of the traits predicts openness when in the model all together. The lines estimate the 95% confidence interval. From this plot, it can be interpreted that all four traits have positive coefficients, so higher extraversion, emotional stability, conscientiousness, and agreeableness each predict higher openness when you adjust for the others. Since extraversion has the largest coefficient and its confidence interval is above 0, it would be the strongest unique predictor of openness in the model. Agreeableness and conscientiousness show significant positive associations and emotional stability show some modest contribution.
+
+
+
+
