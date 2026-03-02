@@ -168,3 +168,14 @@ ggplot(narc_cor, aes(x = gender, y = narcissism, fill = gender)) +
 Interpretation: I have always heard that narcissism as a trait is found higher in males than females, so I wanted to create this figure out of curiosity. From it, we see the male median is higher, and more of the male density sits at moderate to high narcissism scores. The figure is showing that based on this sample, men tend to score higher on narcissism than women, though there is still overlap (some women are high, and some men are low).
 
 
+### Data
+
+This data comes from the same dataset from the previous two portfolio pieces given in my Research Methods 1 class. The dataframes were created to include narcissism, extraversion, group-affiliation seeking, status-seeking, gender, and age, although age was not directly visualized in this piece.
+
+
+### Interpretation 
+
+To conclude this portfolio piece, it can be suggested that extraversion and narcissism play different roles in social life, where extraverts are especially drawn to groups, and narcissistic individuals are especially driven to seek higher status. We also see that these narcissistic tendencies are somewhat more common among men based on this MTurk sample.
+
+
+
