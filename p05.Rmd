@@ -1,5 +1,15 @@
 ---
-title: "Portfolio 5"
+title: "Portfolio 5 - Openness and the Big Five in Emerging Adulthood"
 ---
 
-> The projects should be numbered consecutively (i.e., in the order in which you began them), and should include for each project a description of the goal, the product (computer program, hand graph, computer graph, etc.), the data, and some interpretation. Reports must be reproducible and of high quality in terms of writing, grammar, presentation, etc.
+### Goal
+
+Expand on my previous portfolio piece looking at a sample from mTurk to observe patterns to further my future work on openness to experience. This portfolio piece will focus to test how well other Big Five traits (extraversion, agreeableness, conscientiousness, and emotional stability) predict openness to experience, and examine whether mean levels and predictors of openness are similar across emerging‑adult age groups (18–23, 23–25, 25–30) that parallel the target ages in my planned chatbot study.
+
+
+### Products
+
+This project will produce a cleaned Big Five dataset with TIPI‑based composite scores for extraversion, agreeableness, conscientiousness, emotional stability, and openness. I will create a correlation table showing how openness relates to the other four traits in the full MTurk sample, followed by a multiple regression model predicting openness from extraversion, agreeableness, conscientiousness, and emotional stability with standardized coefficients and overall model fit. I will derive age variables that capture the emerging‑adult bands 18–23, 23–25, and 25–30, and use these to compute and visualize mean openness and confidence intervals across age bands. Finally, I will run parallel regressions predicting openness within each age band and summarize them in a compact table, allowing me to compare whether the pattern of trait predictors is similar or different across emerging‑adult ages that map onto the target range for my planned chatbot study.
+
+
+
