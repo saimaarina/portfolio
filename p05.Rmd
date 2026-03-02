@@ -148,5 +148,18 @@ ggplot(coef_df,
 Interpretation: This plot shows how strongly each of the traits predicts openness when in the model all together. The lines estimate the 95% confidence interval. From this plot, it can be interpreted that all four traits have positive coefficients, so higher extraversion, emotional stability, conscientiousness, and agreeableness each predict higher openness when you adjust for the others. Since extraversion has the largest coefficient and its confidence interval is above 0, it would be the strongest unique predictor of openness in the model. Agreeableness and conscientiousness show significant positive associations and emotional stability show some modest contribution.
 
 
+```{r - creating age groups}
+big5 <- big5 %>%
+  mutate(
+    age_group = case_when(
+      age >= 18 & age <= 23 ~ "18-23",
+      age >  23 & age <= 25 ~ "23-25",
+      age >  25 & age <= 30 ~ "25-30",
+      age >  30             ~ "30+",
+      TRUE                  ~ NA_character_
+    ),
+    age_group = factor(age_group, levels = c("18-23", "23-25", "25-30", "30+"))
+  )
+```
 
 

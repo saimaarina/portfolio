@@ -541,6 +541,17 @@ the largest coefficient and its confidence interval is above 0, it would
 be the strongest unique predictor of openness in the model.
 Agreeableness and conscientiousness show significant positive
 associations and emotional stability show some modest contribution.</p>
+<pre class="r"><code>big5 &lt;- big5 %&gt;%
+  mutate(
+    age_group = case_when(
+      age &gt;= 18 &amp; age &lt;= 23 ~ &quot;18-23&quot;,
+      age &gt;  23 &amp; age &lt;= 25 ~ &quot;23-25&quot;,
+      age &gt;  25 &amp; age &lt;= 30 ~ &quot;25-30&quot;,
+      age &gt;  30             ~ &quot;30+&quot;,
+      TRUE                  ~ NA_character_
+    ),
+    age_group = factor(age_group, levels = c(&quot;18-23&quot;, &quot;23-25&quot;, &quot;25-30&quot;, &quot;30+&quot;))
+  )</code></pre>
 </div>
 
 
