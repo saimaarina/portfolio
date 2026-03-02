@@ -384,6 +384,36 @@ cor_df &lt;- cor_mat %&gt;%
 Interpretation: From this heatmap, it can be interpreted that narcissism
 travels most strongly with status seeking, and extraversion travels most
 strongly with group‑affiliation.</p>
+<pre class="r"><code>ggplot(narc_cor, aes(x = narcissism, y = group_aff)) +
+  geom_point(alpha = 0.2) +
+  geom_smooth(method = &quot;lm&quot;, se = TRUE, color = &quot;red&quot;) +
+  labs(x = &quot;Narcissism&quot;,
+       y = &quot;Group-affiliation motive&quot;,
+       title = &quot;Narcissism and group-affiliation seeking&quot;) +
+  theme_minimal(base_size = 12)</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="p06_files/figure-html/-%20narcissism%20vs%20group%20aff-1.png" alt="" width="672" /></p>
+<p>Interpretation: This scatterplot shows a modest positive association
+between narcissism and group‑affiliation motive. Participants higher in
+narcissism tended to report slightly stronger desires to belong to
+social groups, although the wide spread of points indicates substantial
+variability at each narcissism level.</p>
+<pre class="r"><code>ggplot(narc_cor, aes(x = narcissism, y = status)) +
+  geom_point(alpha = 0.2) +
+  geom_smooth(method = &quot;lm&quot;, se = TRUE, color = &quot;blue&quot;) +
+  labs(x = &quot;Narcissism&quot;,
+       y = &quot;Status-seeking motive&quot;,
+       title = &quot;Narcissism and status seeking&quot;) +
+  theme_minimal(base_size = 12)</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="p06_files/figure-html/-%20narcissism%20vs%20status%20seeking-1.png" alt="" width="672" /></p>
+<p>Interpretation: This scatterplot is showing a strong positive
+association between narcissism and status‑seeking motive where
+participants with higher narcissism scores tended to report
+substantially greater desire for social status and prestige, with
+relatively little overlap in predicted status‑seeking at the lowest
+versus highest levels of narcissism. It has a more upwards slope than
+group-affiliation seeking.</p>
 </div>
 
 
