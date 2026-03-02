@@ -1,5 +1,11 @@
 ---
-title: "Portfolio 6"
+title: "Portfolio 6 - Narcissiscm and Extraversion as Predictors"
 ---
 
-> The projects should be numbered consecutively (i.e., in the order in which you began them), and should include for each project a description of the goal, the product (computer program, hand graph, computer graph, etc.), the data, and some interpretation. Reports must be reproducible and of high quality in terms of writing, grammar, presentation, etc.
+### Goal
+
+For my Research Methods 1 class, I wrote a paper looking at narcissism and extraversion as predictors of status seeking and group affiliation behaviors using the same mTurk data. In this portfolio piece, I want to make visualizations/figures of my main findings in order to demonstrate them in a visually appealing way that is not found in the original paper that I wrote. It will illustrate how narcissism and extraversion relate to group‑affiliation and status‑seeking motives in a sample of 300 adults, emphasizing that narcissism uniquely predicts status seeking whereas extraversion uniquely predicts group‑affiliation seeking.
+
+### Products
+
+The products will include a correlation heatmap showing associations among narcissism, extraversion, group‑affiliation, and status seeking, two scatterplots with smooth lines depicting the bivariate relationships of narcissism with group‑affiliation and status seeking and a pair of bar or coefficient plots summarizing the hierarchical regression results, highlighting that extraversion uniquely predicts group‑affiliation while narcissism uniquely predicts status seeking when both are entered together.
