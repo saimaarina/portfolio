@@ -44,3 +44,46 @@ big5 <- big5 %>%
 glimpse(big5)
 ```
 
+```{r - loading psych}
+library(psych)
+
+cor_vars <- big5 %>%
+  select(openness, extraversion, agreeableness, conscientiousness, emotional_stability)
+
+cor_results <- psych::corr.test(cor_vars, use = "pairwise")
+cor_results$r      # correlations
+cor_results$p      # p-values
+
+model_full <- lm(openness ~ extraversion + agreeableness +
+                   conscientiousness + emotional_stability,
+                 data = big5)
+
+cor_obj <- psych::corr.test(cor_vars, use = "pairwise")
+cor_mat <- cor_obj$r    
+
+summary(model_full)
+```
+```{r - heat map}
+cor_df <- cor_mat %>%
+  as.data.frame() %>%
+  tibble::rownames_to_column("var1") %>%
+  pivot_longer(-var1, names_to = "var2", values_to = "r")
+
+ggplot(cor_df, aes(x = var1, y = var2, fill = r)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(
+    low = "#2166ac", mid = "white", high = "#b2182b",
+    midpoint = 0, limits = c(-1, 1), name = "r"
+  ) +
+  geom_text(aes(label = sprintf("%.2f", r)), size = 3) +
+  coord_fixed() +
+  labs(x = NULL, y = NULL) +
+  theme_minimal(base_size = 12) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    panel.grid = element_blank()
+  )
+```
+
+Interpretation: Using AI, I created a heatmap that helps visualize the correlations among openness and the other Big 5 traits, showing a clear visual that shows which of the traits are most closely aligned to openness. Darker red means a stronger positive relationship; paler pink means a weaker positive one. Openness correlates .36 with extraversion, .34 with agreeableness, .28 with conscientiousness, and .25 with emotional stability. This means people higher in openness in this sample also tend to be somewhat more extraverted, agreeable, conscientious, and emotionally stable, but the relationships are moderate, not huge.
+

@@ -365,6 +365,69 @@ glimpse(big5)</code></pre>
 ## $ emotional_stability &lt;dbl&gt; 2.0, 1.5, 6.0, 3.5, 2.5, 2.0, 6.0, 5.0, 6.0, 3.0, …
 ## $ age                 &lt;dbl&gt; 22, 34, 43, 33, 41, 31, 56, 26, 37, 61, 44, 34, 37…
 ## $ gender              &lt;fct&gt; Female, Female, Female, Female, Female, Female, Ma…</code></pre>
+<pre class="r"><code>library(psych)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;psych&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:ggplot2&#39;:
+## 
+##     %+%, alpha</code></pre>
+<pre class="r"><code>cor_vars &lt;- big5 %&gt;%
+  select(openness, extraversion, agreeableness, conscientiousness, emotional_stability)
+
+cor_results &lt;- psych::corr.test(cor_vars, use = &quot;pairwise&quot;)
+cor_results$r      # correlations</code></pre>
+<pre><code>##                      openness extraversion agreeableness conscientiousness
+## openness            1.0000000    0.3586197     0.3422761         0.2495468
+## extraversion        0.3586197    1.0000000     0.2596935         0.1420666
+## agreeableness       0.3422761    0.2596935     1.0000000         0.3798200
+## conscientiousness   0.2495468    0.1420666     0.3798200         1.0000000
+## emotional_stability 0.2814148    0.3422590     0.3835552         0.4117106
+##                     emotional_stability
+## openness                      0.2814148
+## extraversion                  0.3422590
+## agreeableness                 0.3835552
+## conscientiousness             0.4117106
+## emotional_stability           1.0000000</code></pre>
+<pre class="r"><code>cor_results$p      # p-values</code></pre>
+<pre><code>##                         openness extraversion agreeableness conscientiousness
+## openness            0.000000e+00 1.090026e-09  6.837218e-09      2.444023e-05
+## extraversion        1.557180e-10 0.000000e+00  1.551656e-05      1.378194e-02
+## agreeableness       1.139536e-09 5.172186e-06  0.000000e+00      7.915304e-11
+## conscientiousness   1.222012e-05 1.378194e-02  9.894130e-12      0.000000e+00
+## emotional_stability 7.255995e-07 1.141837e-09  5.961108e-12      1.057341e-13
+##                     emotional_stability
+## openness                   2.902398e-06
+## extraversion               6.837218e-09
+## agreeableness              5.364997e-11
+## conscientiousness          1.057341e-12
+## emotional_stability        0.000000e+00</code></pre>
+<pre class="r"><code>model_full &lt;- lm(openness ~ extraversion + agreeableness +
+                   conscientiousness + emotional_stability,
+                 data = big5)
+
+summary(model_full)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = openness ~ extraversion + agreeableness + conscientiousness + 
+##     emotional_stability, data = big5)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.2465 -0.8400 -0.0158  0.9038  3.8354 
+## 
+## Coefficients:
+##                     Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)          2.23030    0.36677   6.081 3.69e-09 ***
+## extraversion         0.20798    0.04339   4.793 2.61e-06 ***
+## agreeableness        0.21306    0.06037   3.529 0.000484 ***
+## conscientiousness    0.10999    0.06151   1.788 0.074753 .  
+## emotional_stability  0.05915    0.05378   1.100 0.272315    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1.244 on 295 degrees of freedom
+## Multiple R-squared:  0.2118, Adjusted R-squared:  0.2011 
+## F-statistic: 19.82 on 4 and 295 DF,  p-value: 1.826e-14</code></pre>
 </div>
 
 
