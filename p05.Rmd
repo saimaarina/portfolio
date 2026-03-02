@@ -162,4 +162,12 @@ big5 <- big5 %>%
   )
 ```
 
+```{r - college ages}
+big5 <- big5 %>%
+  mutate(
+    age_18_23 = ifelse(age >= 18 & age <= 23, "18-23", "24+"),
+    age_18_23 = factor(age_18_23, levels = c("24+", "18-23"))
+  )
+```
+
 

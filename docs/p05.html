@@ -552,6 +552,11 @@ associations and emotional stability show some modest contribution.</p>
     ),
     age_group = factor(age_group, levels = c(&quot;18-23&quot;, &quot;23-25&quot;, &quot;25-30&quot;, &quot;30+&quot;))
   )</code></pre>
+<pre class="r"><code>big5 &lt;- big5 %&gt;%
+  mutate(
+    age_18_23 = ifelse(age &gt;= 18 &amp; age &lt;= 23, &quot;18-23&quot;, &quot;24+&quot;),
+    age_18_23 = factor(age_18_23, levels = c(&quot;24+&quot;, &quot;18-23&quot;))
+  )</code></pre>
 </div>
 
 
