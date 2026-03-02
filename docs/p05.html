@@ -11,9 +11,9 @@
 
 
 
-<title>Portfolio 5</title>
+<title>Portfolio 5 - Openness and the Big Five in Emerging Adulthood</title>
 
-<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -141,11 +141,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -174,8 +178,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -183,16 +187,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -293,18 +290,82 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Portfolio 5</h1>
+<h1 class="title toc-ignore">Portfolio 5 - Openness and the Big Five in
+Emerging Adulthood</h1>
 
 </div>
 
 
-<blockquote>
-<p>The projects should be numbered consecutively (i.e., in the order in
-which you began them), and should include for each project a description
-of the goal, the product (computer program, hand graph, computer graph,
-etc.), the data, and some interpretation. Reports must be reproducible
-and of high quality in terms of writing, grammar, presentation, etc.</p>
-</blockquote>
+<div id="goal" class="section level3">
+<h3>Goal</h3>
+<p>Expand on my previous portfolio piece looking at a sample from mTurk
+to observe patterns to further my future work on openness to experience.
+This portfolio piece will focus to test how well other Big Five traits
+(extraversion, agreeableness, conscientiousness, and emotional
+stability) predict openness to experience, and examine whether mean
+levels and predictors of openness are similar across emerging‑adult age
+groups (18–23, 23–25, 25–30) that parallel the target ages in my planned
+chatbot study.</p>
+</div>
+<div id="products" class="section level3">
+<h3>Products</h3>
+<p>This project will produce a cleaned Big Five dataset with TIPI‑based
+composite scores for extraversion, agreeableness, conscientiousness,
+emotional stability, and openness. I will create a correlation table
+showing how openness relates to the other four traits in the full MTurk
+sample, followed by a multiple regression model predicting openness from
+extraversion, agreeableness, conscientiousness, and emotional stability
+with standardized coefficients and overall model fit. I will derive age
+variables that capture the emerging‑adult bands 18–23, 23–25, and 25–30,
+and use these to compute and visualize mean openness and confidence
+intervals across age bands. Finally, I will run parallel regressions
+predicting openness within each age band and summarize them in a compact
+table, allowing me to compare whether the pattern of trait predictors is
+similar or different across emerging‑adult ages that map onto the target
+range for my planned chatbot study.</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+## ✔ dplyr     1.1.4     ✔ readr     2.1.6
+## ✔ forcats   1.0.1     ✔ stringr   1.6.0
+## ✔ ggplot2   4.0.1     ✔ tibble    3.3.1
+## ✔ lubridate 1.9.4     ✔ tidyr     1.3.2
+## ✔ purrr     1.2.1     
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+<pre class="r"><code>library(haven)
+
+mTurk_raw &lt;- read_sav(&quot;OnlinePsychologySurveyData.sav&quot;) %&gt;% 
+  as_tibble()</code></pre>
+<pre class="r"><code>big5 &lt;- mTurk_raw %&gt;% 
+  transmute(
+    openness           = OPENNESS,
+    extraversion    = EXTRAVERSION,         
+    agreeableness   = AGREEABLENESS,
+    conscientiousness = CONSCIENTIOUSNESS,
+    emotional_stability = EMOTIONALSTABILITY,
+    age = Age,
+    gender = Gender
+  )</code></pre>
+<pre class="r"><code>big5 &lt;- big5 %&gt;% 
+  mutate(
+    gender = factor(gender,
+                    levels = c(1, 2),
+                    labels = c(&quot;Male&quot;, &quot;Female&quot;))
+  )
+
+glimpse(big5)</code></pre>
+<pre><code>## Rows: 300
+## Columns: 7
+## $ openness            &lt;dbl&gt; 4.0, 1.5, 6.0, 4.0, 6.5, 4.5, 5.0, 5.5, 6.0, 3.5, …
+## $ extraversion        &lt;dbl&gt; 1.0, 2.0, 4.0, 2.0, 3.5, 2.0, 4.5, 1.5, 4.0, 3.0, …
+## $ agreeableness       &lt;dbl&gt; 5.0, 4.5, 6.0, 4.5, 7.0, 2.5, 6.5, 6.5, 7.0, 5.0, …
+## $ conscientiousness   &lt;dbl&gt; 7.0, 6.5, 6.0, 5.5, 7.0, 5.0, 7.0, 6.0, 4.5, 4.0, …
+## $ emotional_stability &lt;dbl&gt; 2.0, 1.5, 6.0, 3.5, 2.5, 2.0, 6.0, 5.0, 6.0, 3.0, …
+## $ age                 &lt;dbl&gt; 22, 34, 43, 33, 41, 31, 56, 26, 37, 61, 44, 34, 37…
+## $ gender              &lt;fct&gt; Female, Female, Female, Female, Female, Female, Ma…</code></pre>
+</div>
 
 
 

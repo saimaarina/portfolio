@@ -12,4 +12,35 @@ Expand on my previous portfolio piece looking at a sample from mTurk to observe 
 This project will produce a cleaned Big Five dataset with TIPI‑based composite scores for extraversion, agreeableness, conscientiousness, emotional stability, and openness. I will create a correlation table showing how openness relates to the other four traits in the full MTurk sample, followed by a multiple regression model predicting openness from extraversion, agreeableness, conscientiousness, and emotional stability with standardized coefficients and overall model fit. I will derive age variables that capture the emerging‑adult bands 18–23, 23–25, and 25–30, and use these to compute and visualize mean openness and confidence intervals across age bands. Finally, I will run parallel regressions predicting openness within each age band and summarize them in a compact table, allowing me to compare whether the pattern of trait predictors is similar or different across emerging‑adult ages that map onto the target range for my planned chatbot study.
 
 
+```{r - loading data}
+library(tidyverse)
+library(haven)
+
+mTurk_raw <- read_sav("OnlinePsychologySurveyData.sav") %>% 
+  as_tibble()
+```
+
+```{r - create dataframe to measure openness and big 5 traits, age, and gender scores}
+big5 <- mTurk_raw %>% 
+  transmute(
+    openness           = OPENNESS,
+    extraversion    = EXTRAVERSION,         
+    agreeableness   = AGREEABLENESS,
+    conscientiousness = CONSCIENTIOUSNESS,
+    emotional_stability = EMOTIONALSTABILITY,
+    age = Age,
+    gender = Gender
+  )
+```
+
+```{r - recoding gender}
+big5 <- big5 %>% 
+  mutate(
+    gender = factor(gender,
+                    levels = c(1, 2),
+                    labels = c("Male", "Female"))
+  )
+
+glimpse(big5)
+```
 
