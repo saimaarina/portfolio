@@ -41,6 +41,33 @@ narc_cor <- narc_cor %>%
 
 glimpse(narc_cor)
 ```
+```{r - cor matrix}
+vars <- narc_cor %>%
+  select(narcissism, extraversion, group_aff, status)
+
+cor_obj <- psych::corr.test(vars, use = "pairwise")
+cor_mat <- cor_obj$r
+
+cor_df <- cor_mat %>%
+  as.data.frame() %>%
+  tibble::rownames_to_column("var1") %>%
+  pivot_longer(-var1, names_to = "var2", values_to = "r")
+```
+
+```{r - correlation heatmap}
+ggplot(cor_df, aes(x = var1, y = var2, fill = r)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(low = "#2166ac", mid = "white", high = "#b2182b",
+                       midpoint = 0, limits = c(-1, 1), name = "r") +
+  geom_text(aes(label = sprintf("%.2f", r)), size = 3) +
+  coord_fixed() +
+  labs(x = NULL, y = NULL,
+       title = "Correlations among narcissism, extraversion, and social motives") +
+  theme_minimal(base_size = 12) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        panel.grid = element_blank())
+```
+Interpretation: From this heatmap, it can be interpreted that narcissism travels most strongly with status seeking, and extraversion travels most strongly with group‑affiliation. 
 
 
 

@@ -359,6 +359,31 @@ glimpse(narc_cor)</code></pre>
 ## $ status       &lt;dbl&gt; 1.500000, 4.166667, 3.333333, 4.333333, 3.333333, 4.66666…
 ## $ age          &lt;dbl&gt; 22, 34, 43, 33, 41, 31, 56, 26, 37, 61, 44, 34, 37, 21, 3…
 ## $ gender       &lt;fct&gt; Female, Female, Female, Female, Female, Female, Male, Mal…</code></pre>
+<pre class="r"><code>vars &lt;- narc_cor %&gt;%
+  select(narcissism, extraversion, group_aff, status)
+
+cor_obj &lt;- psych::corr.test(vars, use = &quot;pairwise&quot;)
+cor_mat &lt;- cor_obj$r
+
+cor_df &lt;- cor_mat %&gt;%
+  as.data.frame() %&gt;%
+  tibble::rownames_to_column(&quot;var1&quot;) %&gt;%
+  pivot_longer(-var1, names_to = &quot;var2&quot;, values_to = &quot;r&quot;)</code></pre>
+<pre class="r"><code>ggplot(cor_df, aes(x = var1, y = var2, fill = r)) +
+  geom_tile(color = &quot;white&quot;) +
+  scale_fill_gradient2(low = &quot;#2166ac&quot;, mid = &quot;white&quot;, high = &quot;#b2182b&quot;,
+                       midpoint = 0, limits = c(-1, 1), name = &quot;r&quot;) +
+  geom_text(aes(label = sprintf(&quot;%.2f&quot;, r)), size = 3) +
+  coord_fixed() +
+  labs(x = NULL, y = NULL,
+       title = &quot;Correlations among narcissism, extraversion, and social motives&quot;) +
+  theme_minimal(base_size = 12) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        panel.grid = element_blank())</code></pre>
+<p><img src="p06_files/figure-html/-%20correlation%20heatmap-1.png" alt="" width="672" />
+Interpretation: From this heatmap, it can be interpreted that narcissism
+travels most strongly with status seeking, and extraversion travels most
+strongly with group‑affiliation.</p>
 </div>
 
 
