@@ -96,4 +96,57 @@ Interpretation: This scatterplot is showing a strong positive association betwee
 
 
 
+```{r - hiearchial regression}
+library(broom)
 
+m1_group <- lm(group_aff ~ extraversion, data = narc_cor)
+m2_group <- lm(group_aff ~ extraversion + narcissism, data = narc_cor)
+
+
+m1_status <- lm(status ~ extraversion, data = narc_cor)
+m2_status <- lm(status ~ extraversion + narcissism, data = narc_cor)
+
+
+anova(m1_group, m2_group)
+anova(m1_status, m2_status)
+```
+```{r - label cleaning, helped by AI}
+coef_group <- tidy(m2_group, conf.int = TRUE) %>%
+  filter(term != "(Intercept)") %>%
+  mutate(
+    outcome = "Group affiliation",
+    term = recode(term,
+                  extraversion = "Extraversion",
+                  narcissism   = "Narcissism")
+  )
+
+coef_status <- tidy(m2_status, conf.int = TRUE) %>%
+  filter(term != "(Intercept)") %>%
+  mutate(
+    outcome = "Status seeking",
+    term = recode(term,
+                  extraversion = "Extraversion",
+                  narcissism   = "Narcissism")
+  )
+
+coef_all <- bind_rows(coef_group, coef_status)
+```
+
+
+```{r - faceted coefficient plots}
+ggplot(coef_all,
+       aes(x = estimate, y = term,
+           xmin = conf.low, xmax = conf.high,
+           color = term)) +
+  geom_vline(xintercept = 0, linetype = 2, color = "gray") +
+  geom_point(size = 2) +
+  geom_errorbarh(height = 0.15, size = 0.9) +
+  facet_wrap(~ outcome) +
+  scale_color_brewer(palette = "Dark2", name = "Predictor") +
+  labs(x = "Unstandardized regression coefficient",
+       y = NULL,
+       title = "Unique effects of narcissism and extraversion on social motives") +
+  theme_minimal(base_size = 12)
+```
+
+Interpretation: Based on the visual from the group-affiliation side, extraversion acts as a unique predictor wanting group affiliation, but narcissism does not add meaningful prediction once extraversion is controlled. From the status-seeking side, narcissism uniquely predicts status seeking, whereas extraversion does not uniquely matter for status once narcissism is included. 

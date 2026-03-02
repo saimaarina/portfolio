@@ -414,6 +414,86 @@ substantially greater desire for social status and prestige, with
 relatively little overlap in predicted status‑seeking at the lowest
 versus highest levels of narcissism. It has a more upwards slope than
 group-affiliation seeking.</p>
+<pre class="r"><code>library(broom)
+
+m1_group &lt;- lm(group_aff ~ extraversion, data = narc_cor)
+m2_group &lt;- lm(group_aff ~ extraversion + narcissism, data = narc_cor)
+
+
+m1_status &lt;- lm(status ~ extraversion, data = narc_cor)
+m2_status &lt;- lm(status ~ extraversion + narcissism, data = narc_cor)
+
+
+anova(m1_group, m2_group)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: group_aff ~ extraversion
+## Model 2: group_aff ~ extraversion + narcissism
+##   Res.Df    RSS Df Sum of Sq      F Pr(&gt;F)
+## 1    298 365.25                           
+## 2    297 364.60  1    0.6532 0.5321 0.4663</code></pre>
+<pre class="r"><code>anova(m1_status, m2_status)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: status ~ extraversion
+## Model 2: status ~ extraversion + narcissism
+##   Res.Df    RSS Df Sum of Sq      F    Pr(&gt;F)    
+## 1    298 446.41                                  
+## 2    297 339.10  1    107.31 93.989 &lt; 2.2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="r"><code>coef_group &lt;- tidy(m2_group, conf.int = TRUE) %&gt;%
+  filter(term != &quot;(Intercept)&quot;) %&gt;%
+  mutate(
+    outcome = &quot;Group affiliation&quot;,
+    term = recode(term,
+                  extraversion = &quot;Extraversion&quot;,
+                  narcissism   = &quot;Narcissism&quot;)
+  )
+
+coef_status &lt;- tidy(m2_status, conf.int = TRUE) %&gt;%
+  filter(term != &quot;(Intercept)&quot;) %&gt;%
+  mutate(
+    outcome = &quot;Status seeking&quot;,
+    term = recode(term,
+                  extraversion = &quot;Extraversion&quot;,
+                  narcissism   = &quot;Narcissism&quot;)
+  )
+
+coef_all &lt;- bind_rows(coef_group, coef_status)</code></pre>
+<pre class="r"><code>ggplot(coef_all,
+       aes(x = estimate, y = term,
+           xmin = conf.low, xmax = conf.high,
+           color = term)) +
+  geom_vline(xintercept = 0, linetype = 2, color = &quot;gray&quot;) +
+  geom_point(size = 2) +
+  geom_errorbarh(height = 0.15, size = 0.9) +
+  facet_wrap(~ outcome) +
+  scale_color_brewer(palette = &quot;Dark2&quot;, name = &quot;Predictor&quot;) +
+  labs(x = &quot;Unstandardized regression coefficient&quot;,
+       y = NULL,
+       title = &quot;Unique effects of narcissism and extraversion on social motives&quot;) +
+  theme_minimal(base_size = 12)</code></pre>
+<pre><code>## Warning: `geom_errorbarh()` was deprecated in ggplot2 4.0.0.
+## ℹ Please use the `orientation` argument of `geom_errorbar()` instead.
+## This warning is displayed once per session.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.</code></pre>
+<pre><code>## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+## ℹ Please use `linewidth` instead.
+## ℹ The deprecated feature was likely used in the ggplot2 package.
+##   Please report the issue at &lt;https://github.com/tidyverse/ggplot2/issues&gt;.
+## This warning is displayed once per session.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.</code></pre>
+<pre><code>## `height` was translated to `width`.</code></pre>
+<p><img src="p06_files/figure-html/-%20faceted%20coefficient%20plots-1.png" alt="" width="672" /></p>
+<p>Interpretation: Based on the visual from the group-affiliation side,
+extraversion acts as a unique predictor wanting group affiliation, but
+narcissism does not add meaningful prediction once extraversion is
+controlled. From the status-seeking side, narcissism uniquely predicts
+status seeking, whereas extraversion does not uniquely matter for status
+once narcissism is included.</p>
 </div>
 
 
